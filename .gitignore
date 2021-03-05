@@ -1,0 +1,9 @@
+
+*.history
+*.Rhistory
+*.DS_Store
+*.sh
+*.Rproj
+.Rproj.user
+dat/*
+
