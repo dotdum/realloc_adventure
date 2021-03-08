@@ -90,6 +90,35 @@ options(shiny.error = browser)
       }
     })
     
+    # Define error text that checks whether reallocation time inputs have compositions > 0
+    output$err3 <- renderText({
+      rt_vec <- Rtime()
+      comp_nms <- names(rt_vec)
+      comp_vls_lt0 <- rt_vec <= 0
+      
+      if (any(comp_vls_lt0)) {
+        paste0(
+          "Currently there are time-use categories with negative time(s). \n",
+          "This is because the re-allocation of time exceeds the corresponding ",
+          "starting time in its time-use category. \n",
+          "The listed time-use categories below provide the mintutes required ",
+          "for there to be non-negative time categories (minutes in brackets): \n",
+          paste(
+            paste0(
+              comp_nms[comp_vls_lt0], 
+              "(", 
+              round(-rt_vec[comp_vls_lt0] * 60, 0), 
+              " minutes)"
+            ), 
+            collapse = ",\n"
+          )
+        )
+      } else {
+        " "
+      }
+    })
+    
+    
     observeEvent(input$reset_sliders, { 
       
       updateSliderInput(session, 'Sleep' ,value = 0)
@@ -284,9 +313,9 @@ options(shiny.error = browser)
       paste0(init.pred.bf(), "% [",init.pred.bf.ci1(),":",init.pred.bf.ci2(), "]")
     })
     
-      output$specific.new <- renderText({
-        paste0(reall.pred.bf(), "% [",reall.pred.bf.ci1(),":",reall.pred.bf.ci2(), "]")
-      })
+    output$specific.new <- renderText({
+      paste0(reall.pred.bf(), "% [",reall.pred.bf.ci1(),":",reall.pred.bf.ci2(), "]")
+    })
     
      output$specific.diff <- renderText({
       paste0(delta.pred())

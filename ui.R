@@ -191,7 +191,8 @@
   		      sliderInput("Domestic_SelfCare", "Domestic & SelfCare", 
   		        value = 0, min = -60, max = 60, ticks = FALSE
   		      ),  # sliderInput.Domestic_SelfCare
-    			  div(textOutput("err2"), style = "color: red")
+  		      div(textOutput("err2"), style = "color: red"),  
+  		      div(textOutput("err3"), style = "color: orange")
           ),# box.changetime,
   		    actionButton("reset_sliders", label = "Reset sliders")
   		  ), # column.left
