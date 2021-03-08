@@ -171,154 +171,77 @@ options(shiny.error = browser)
  ##model for %Body fat  
   # Define predictions for initial composition
     init.pred.bf <- reactive({
-      out <- predict(model.bf, 
-                     newdata = list(
-                       ilr1=ilr(init.comp())[1],
-                       ilr2=ilr(init.comp())[2], 
-                       ilr3=ilr(init.comp())[3],
-                       ilr4=ilr(init.comp())[4],
-                       ilr5=ilr(init.comp())[5],
-                       ilr6=ilr(init.comp())[6],
-                       cov.sex = input$sex,
-                       cov.age = input$age,
-                       cov.sep = input$sep,
-                       cov.puberty =input$puberty
-                     )  #list
-      )  #predict
-      out <- out[1]
-      out=round(exp(out),1) #because log transformed outcome
-      names(out) <- "New"
+      out <- 
+        predict(
+          model.bf, 
+          newdata = list(
+           ilr1=ilr(init.comp())[1],
+           ilr2=ilr(init.comp())[2], 
+           ilr3=ilr(init.comp())[3],
+           ilr4=ilr(init.comp())[4],
+           ilr5=ilr(init.comp())[5],
+           ilr6=ilr(init.comp())[6],
+           cov.sex = input$sex,
+           cov.age = input$age,
+           cov.sep = input$sep,
+           cov.puberty =input$puberty
+          ),  #list
+          interval = "confidence"
+        )  #predict
+      out <- out[1, ]
+      out <- exp(out) # because log transformed outcome
+
       return(out)
     })
     
-    init.pred.bf.ci1 <- reactive({
-      pred <- predict(model.bf, 
-                      newdata = list(
-                        ilr1=ilr(init.comp())[1],
-                        ilr2=ilr(init.comp())[2], 
-                        ilr3=ilr(init.comp())[3],
-                        ilr4=ilr(init.comp())[4],
-                        ilr5=ilr(init.comp())[5],
-                        ilr6=ilr(init.comp())[6],
-                        cov.sex = input$sex,
-                        cov.age = input$age,
-                        cov.sep = input$sep,
-                        cov.puberty =input$puberty
-                      )  #list
-                      ,interval = "confidence"
-      )  #predict
-      #out <- out[2:3]
-      out=round(exp(pred[2]),1) #because log transformed outcome
-      names(out) <- "New 95%CI1"
-      return(out)
-    })
-    init.pred.bf.ci2 <- reactive({
-      pred <- predict(model.bf, 
-                      newdata = list(
-                        ilr1=ilr(init.comp())[1],
-                        ilr2=ilr(init.comp())[2], 
-                        ilr3=ilr(init.comp())[3],
-                        ilr4=ilr(init.comp())[4],
-                        ilr5=ilr(init.comp())[5],
-                        ilr6=ilr(init.comp())[6],
-                        cov.sex = input$sex,
-                        cov.age = input$age,
-                        cov.sep = input$sep,
-                        cov.puberty =input$puberty
-                      )  #list
-                      ,interval = "confidence"
-      )  #predict
-      #out <- out[2:3]
-      out=round(exp(pred[3]),1) #because log transformed outcome
-      names(out) <- "New 95%CI2"
-      return(out)
-    })
     
-  
   # Define predictions for reallocation composition
     reall.pred.bf <- reactive({
-      out <- predict(model.bf, 
-                     newdata = list(
-                       ilr1=ilr(Rcomp())[1],
-                       ilr2=ilr(Rcomp())[2], 
-                       ilr3=ilr(Rcomp())[3],
-                       ilr4=ilr(Rcomp())[4],
-                       ilr5=ilr(Rcomp())[5],
-                       ilr6=ilr(Rcomp())[6],
-                       cov.sex = input$sex,
-                       cov.age = input$age,
-                       cov.sep = input$sep,
-                       cov.puberty =input$puberty
-        )  #list
-      )  #predict
-      out <- out[1]
-      out=round(exp(out),1) #because log transformed outcome
-      names(out) <- "New"
+      out <- 
+        predict(
+          model.bf, 
+          newdata = list(
+            ilr1=ilr(Rcomp())[1],
+            ilr2=ilr(Rcomp())[2], 
+            ilr3=ilr(Rcomp())[3],
+            ilr4=ilr(Rcomp())[4],
+            ilr5=ilr(Rcomp())[5],
+            ilr6=ilr(Rcomp())[6],
+            cov.sex = input$sex,
+            cov.age = input$age,
+            cov.sep = input$sep,
+            cov.puberty =input$puberty
+          ),  #list
+          interval = "confidence"
+        )  #predict
+      out <- out[1, ]
+      out <- exp(out) #because log transformed outcome
+
       return(out)
     })
-    
-    reall.pred.bf.ci1 <- reactive({
-      pred <- predict(model.bf, 
-                     newdata = list(
-                       ilr1=ilr(Rcomp())[1],
-                       ilr2=ilr(Rcomp())[2], 
-                       ilr3=ilr(Rcomp())[3],
-                       ilr4=ilr(Rcomp())[4],
-                       ilr5=ilr(Rcomp())[5],
-                       ilr6=ilr(Rcomp())[6],
-                       cov.sex = input$sex,
-                       cov.age = input$age,
-                       cov.sep = input$sep,
-                       cov.puberty =input$puberty
-                     )  #list
-                     ,interval = "confidence"
-      )  #predict
-      #out <- out[2:3]
-      out=round(exp(pred[2]),1) #because log transformed outcome
-      names(out) <- "New 95%CI1"
-      return(out)
-    })
-    reall.pred.bf.ci2 <- reactive({
-      pred <- predict(model.bf, 
-                      newdata = list(
-                        ilr1=ilr(Rcomp())[1],
-                        ilr2=ilr(Rcomp())[2], 
-                        ilr3=ilr(Rcomp())[3],
-                        ilr4=ilr(Rcomp())[4],
-                        ilr5=ilr(Rcomp())[5],
-                        ilr6=ilr(Rcomp())[6],
-                        cov.sex = input$sex,
-                        cov.age = input$age,
-                        cov.sep = input$sep,
-                        cov.puberty =input$puberty
-                      )  #list
-                      ,interval = "confidence"
-      )  #predict
-      #out <- out[2:3]
-      out=round(exp(pred[3]),1) #because log transformed outcome
-      names(out) <- "New 95%CI2"
-      return(out)
-    })
-    
-    
 
     
   # Compute difference between initial and reallocated predictions
-    delta.pred <- reactive({
-      round(reall.pred.bf() - init.pred.bf(), 1)
-    })
    
   # Reallocation results
     output$specific.current <- renderText({
-      paste0(init.pred.bf(), "% [",init.pred.bf.ci1(),":",init.pred.bf.ci2(), "]")
+      pred_init <- init.pred.bf()
+      sprintf("%3.1f%% [%3.1f:%3.1f]", pred_init[1], pred_init[2], pred_init[3])
     })
     
     output$specific.new <- renderText({
-      paste0(reall.pred.bf(), "% [",reall.pred.bf.ci1(),":",reall.pred.bf.ci2(), "]")
+      pred_reall <- reall.pred.bf()
+      sprintf("%3.1f%% [%3.1f:%3.1f]", pred_reall[1], pred_reall[2], pred_reall[3])
     })
     
-     output$specific.diff <- renderText({
-      paste0(delta.pred())
+    delta.pred <- reactive({
+      pred_init <- init.pred.bf()
+      pred_reall <- reall.pred.bf()
+      pred_reall[1] - pred_init[1]
+    })
+    
+    output$specific.diff <- renderText({
+      sprintf("%3.1f%%", delta.pred())
     })
   
     
