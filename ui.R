@@ -72,12 +72,12 @@
     			  fluidRow(
     			    column(width = 8,
     			      numericInput("initSleep", "Sleep (hours)",
-                  value = 11, step = 1
+                  value = 11, step = 1, min = 0, max = 23
   			        )  # numericInput.initSleep.hours
     			    ),
     			    column(width = 4,
     			      numericInput("initSleepmin", "(mins)",
-    			        value = 50, step = 1, min = 0, max = 60
+    			        value = 50, step = 1, min = 0, max = 59
     			      )  # numericInput.initSleep.minutes
     			    )
     			  ),  # fluidRow.initSleep
@@ -85,12 +85,12 @@
     			  fluidRow(
     			    column(width = 8,
     			      numericInput("initScreen", "Screen (hours)",
-                  value = 2, step = 1
+                  value = 2, step = 1, min = 0, max = 23
   			        )  # numericInput.initScreen
     			    ),
     			    column(width = 4,
     			      numericInput("initScreenmin", "(mins)",
-                  value =55 , step = 1, min = 0, max = 60
+                  value =55 , step = 1, min = 0, max = 59
   			        )  # numericInput.initScreen.minutes
     			    )
     			  ),  # fluidRow.initScreen
@@ -98,12 +98,12 @@
     			  fluidRow(
     			    column(width = 8,
       			    numericInput("initPA", "Physical Activity (hours)",
-                  value = 1, step = 1
+                  value = 1, step = 1, min = 0, max = 23
       			    ) # numericInput.initPA.hours
     			    ),
     			    column(width = 4,
     			      numericInput("initPAmin", "(mins)",
-                  value = 57, step = 1, min = 0, max = 60
+                  value = 57, step = 1, min = 0, max = 59
   			        )  # numericInput.initPA.minutes
     			    )
     			  ),  # fluidRow.initPA
@@ -111,12 +111,12 @@
     			  fluidRow(
     			    column(width = 8,
       			    numericInput("initQuietT", "Quiet Time (hours)",
-                  value = 1, step = 1
+                  value = 1, step = 1, min = 0, max = 23
       			    ) # numericInput.initQuietT
     			    ),
     			    column(width = 4,
     			      numericInput("initQuietTmin", "(mins)",
-                  value = 11, step = 1, min = 0, max = 60
+                  value = 11, step = 1, min = 0, max = 59
   			        )  # numericInput.initQuietT.minutes
     			    )
     			  ),  # fluidRow.initQuietT
@@ -124,12 +124,12 @@
     			  fluidRow(
     			    column(width = 8,
     			           numericInput("initPassiveTrans", "Passive Transport",
-    			                        value = 0, step = 1
+    			                        value = 0, step = 1, min = 0, max = 23
     			           )  # numericInput.initPassiveTrans
     			    ),
     			    column(width = 4,
     			           numericInput("initPassiveTransmin", "(mins)",
-    			                        value = 35, step = 1, min = 0, max = 60
+    			                        value = 35, step = 1, min = 0, max = 59
     			           )  # numericInput.initPassiveTrans.minutes
     			    )
     			  ),  # fluidRow.initSchool
@@ -137,12 +137,12 @@
     			  fluidRow(
     			    column(width = 8,
       			    numericInput("initSchool", "School-Related",
-                  value = 2, step = 1
+                  value = 2, step = 1, min = 0, max = 23
       			    )  # numericInput.initSchool
     			    ),
     			    column(width = 4,
     			      numericInput("initSchoolmin", "(mins)",
-                  value = 9, step = 1, min = 0, max = 60
+                  value = 9, step = 1, min = 0, max = 59
   			        )  # numericInput.initSchool.minutes
     			    )
     			  ),  # fluidRow.initSchool
@@ -150,12 +150,12 @@
     			  fluidRow(
     			    column(width = 8,
       			    numericInput("initDomestic_SelfCare", "Domestic & Self Care",
-                  value = 3, step = 1
+                  value = 3, step = 1, min = 0, max = 23
       			    )  # numericInput.initScreen
     			    ),
     			    column(width = 4,
     			      numericInput("initDomestic_SelfCaremin", "(mins)",
-                  value = 23, step = 1, min = 0, max = 60
+                  value = 23, step = 1, min = 0, max = 59
   			        )  # numericInput.initDomestic_SelfCare.minutes
     			    )
     			  ), # fluidRow.initDomestic_SelfCare

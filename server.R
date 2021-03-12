@@ -13,15 +13,56 @@ options(shiny.error = browser)
     
   # Define initial times (hours plus minutes)
     init.time <- reactive({
-      data.frame(
-        Sleep = input$initSleep + input$initSleepmin/60,
-        Screen = input$initScreen + input$initScreenmin/60,
-        PA = input$initPA + input$initPAmin/60,
-        QuietT = input$initQuietT + input$initQuietTmin/60,
-        PassiveTrans = input$initPassiveTrans + input$initPassiveTransmin/60,
-        School = input$initSchool + input$initSchoolmin/60,
-        Domestic_SelfCare = input$initDomestic_SelfCare + input$initDomestic_SelfCaremin/60
-      )
+      
+      init_df <-
+        data.frame(
+          Sleep = input$initSleep + input$initSleepmin/60,
+          Screen = input$initScreen + input$initScreenmin/60,
+          PA = input$initPA + input$initPAmin/60,
+          QuietT = input$initQuietT + input$initQuietTmin/60,
+          PassiveTrans = input$initPassiveTrans + input$initPassiveTransmin/60,
+          School = input$initSchool + input$initSchoolmin/60,
+          Domestic_SelfCare = input$initDomestic_SelfCare + input$initDomestic_SelfCaremin/60
+        )
+      
+      
+      # check no NA values present: turn into 0s if so
+      if (any(is.na(init_df))) {
+        print(init_df)
+        init_df[, c(is.na(init_df))] <- 0
+        print(init_df)
+      }
+      
+      # check for 0 values as we need to add 65% of min to those values for ilrs to work
+      lt0_df <- unlist(init_df) <= 0
+      
+      sum_chk <- rowSums(init_df)
+      
+      # print(init_df)
+      
+      if (any(lt0_df)) {
+        
+        # smallest non-zero time is 65% of a minute
+        quantum_of_time <- 0.65 / 60
+        
+        n_lt0 <- sum(lt0_df)
+        n_gt0 <- sum(!lt0_df)
+        # 65% of a minute, smallest allocation, give to the poor
+        init_df[, lt0_df] <-  quantum_of_time
+        # take from the rich
+        init_df[, !lt0_df] <- init_df[, !lt0_df] - n_lt0 * quantum_of_time / n_gt0  
+             
+        # make sure still sums to 1 day after small tweaks to account for 0s   
+        if (sum_chk != rowSums(init_df)) {
+          stop("Re-allocaiton of small time units to negate 0s unsuccessful")
+        }
+        
+        # print(init_df)
+
+      } 
+      
+      init_df
+
     })
     
   # Define initial composition
