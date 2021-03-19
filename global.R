@@ -14,7 +14,7 @@ require(robustbase)
 # Define model objects
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 # Source models
-rdat_fls <- c("dat/model.bf.RData", "dat/activity.RData")
+rdat_fls <- "dat/model.bf.RData"
 
 fl_exists <- file.exists(rdat_fls)
 if (!all(fl_exists)) {
@@ -28,8 +28,9 @@ if (!all(fl_exists)) {
 }
 
 load("dat/model.bf.RData") #, verbose = TRUE)
-load("dat/activity.RData") # activity names
+
 # Define activity names and number of activities
+activity <- c('Sleep', 'Screen', 'PA', 'QuietT', 'PassiveTrans', 'School', 'Domestic_SelfCare')
 nact <- length(activity)
 
 # Define error messages
