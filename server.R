@@ -89,7 +89,7 @@ options(shiny.error = browser)
     Rtime <- reactive({
       if (sum(reall.time()) == 0) {
         out <- init.time()[1,] + reall.time()/60
-        names(out) <- c("Sleep","Screen", "PA", "QuietT","PassiveTrans", "School", "Domestic_SelfCare")
+        names(out) <- activity_nms
         return(out)
       } else {
         init.time()
@@ -139,16 +139,16 @@ options(shiny.error = browser)
       
       if (any(comp_vls_lt0)) {
         paste0(
-          "Currently there are time-use categories with negative time(s). \n",
+          "Currently there are time-use categories with time(s) not greater than 0 mins. \n",
           "This is because the re-allocation of time exceeds the corresponding ",
           "starting time in its time-use category. \n",
           "The listed time-use categories below provide the mintutes required ",
-          "for there to be non-negative time categories (minutes in brackets): \n",
+          "for there to be positive time in categories (minutes in brackets): \n",
           paste(
             paste0(
               comp_nms[comp_vls_lt0], 
-              "(", 
-              round(-rt_vec[comp_vls_lt0] * 60, 0), 
+              " (", 
+              round(-rt_vec[comp_vls_lt0] * 60 + 1, 0), 
               " minutes)"
             ), 
             collapse = ",\n"
@@ -190,7 +190,7 @@ options(shiny.error = browser)
       data.frame(
         prop = as.vector(Rcomp())*2,  # affects maximal size of histogram columns
         val = rounded.comp,  # rounded composition values
-        lab = activity,  # labels for histogram
+        lab = activity_nms,  # labels for histogram
         unit = comp.units  # composition units
       )
     })  # d3.data

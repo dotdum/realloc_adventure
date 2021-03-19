@@ -30,8 +30,8 @@ if (!all(fl_exists)) {
 load("dat/model.bf.RData") #, verbose = TRUE)
 
 # Define activity names and number of activities
-activity <- c('Sleep', 'Screen', 'PA', 'QuietT', 'PassiveTrans', 'School', 'Domestic_SelfCare')
-nact <- length(activity)
+activity_nms <- c('Sleep', 'Screen', 'PA', 'QuietT', 'PassiveTrans', 'School', 'Domestic_SelfCare')
+nact <- length(activity_nms)
 
 # Define error messages
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
