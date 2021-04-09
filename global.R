@@ -18,12 +18,10 @@ require(foreach)
 debug_mode <- TRUE
 
 
-
-
 # Define model objects
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-# Source models
-rdat_fls <- c("dat/lm_ln_bf.RData", "old-dat/model.bf.RData")
+# Source model elements
+rdat_fls <- "dat/lm_ln_bf.RData"
 
 fl_exists <- file.exists(rdat_fls)
 if (!all(fl_exists)) {
@@ -35,9 +33,11 @@ if (!all(fl_exists)) {
     )
   )
 }
-
-load("old-dat/model.bf.RData") #
-load(rdat_fls[1]) # from "dat/lm_ln_bf.RData", load the objects: "beta_ln_bf", "vcov_ln_bf", "resdf_ln_bf"
+# from "dat/lm_ln_bf.RData", load the objects: 
+#   "beta_ln_bf", 
+#   "vcov_ln_bf", 
+#   "resdf_ln_bf"
+load(rdat_fls[1]) 
 
 # Define activity names and number of activities
 activity_nms <- c('Sleep', 'Screen', 'PA', 'QuietT', 'PassiveTrans', 'School', 'Domestic_SelfCare')

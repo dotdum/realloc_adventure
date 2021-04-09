@@ -38,8 +38,6 @@ options(shiny.error = browser)
       
       sum_chk <- rowSums(init_df)
       
-      # print(init_df)
-      
       if (any(lt0_df)) {
         
         # smallest non-zero time is 65% of a minute
@@ -57,11 +55,13 @@ options(shiny.error = browser)
           stop("Re-allocaiton of small time units to negate 0s unsuccessful")
         }
         
-
       } 
       
-      print(init_df)
-      init_df
+      if (debug_mode) {
+        print(init_df)
+      }
+      
+      return(init_df)
 
     })
     
@@ -211,29 +211,6 @@ options(shiny.error = browser)
 # Predicted outcomes from selected models on result-tab
  ##model for %Body fat  
   # Define predictions for initial composition
-    init.pred.bf <- reactive({
-      out <- 
-        predict(
-          model.bf, 
-          newdata = list(
-            ilr1=ilr(init.comp())[1],
-            ilr2=ilr(init.comp())[2], 
-            ilr3=ilr(init.comp())[3],
-            ilr4=ilr(init.comp())[4],
-            ilr5=ilr(init.comp())[5],
-            ilr6=ilr(init.comp())[6],
-            cov.sex = input$sex,
-            cov.age = input$age,
-            cov.sep = input$sep,
-            cov.puberty =input$puberty
-          ),  #list
-          interval = "confidence"
-        )  #predict
-      out <- out[1, ]
-      out <- exp(out) # because log transformed outcome
-      
-      return(out)
-    })
     
     init_pred_bf <- reactive({
       
@@ -247,32 +224,11 @@ options(shiny.error = browser)
       out_hi <- get_pred_bounds(beta_ln_bf, x0_init, vcov_ln_bf, resdf_ln_bf, bound = +1, alpha = 0.05)
       
       out_init <- c(out_pr, out_lo, out_hi)
-      print(out_init)
       out_init <- exp(out_init) # because log transformed outcome
-
       
-      nd0 <- data.frame(
-        ilr1=ilr(init.comp())[1],
-        ilr2=ilr(init.comp())[2], 
-        ilr3=ilr(init.comp())[3],
-        ilr4=ilr(init.comp())[4],
-        ilr5=ilr(init.comp())[5],
-        ilr6=ilr(init.comp())[6],
-        cov.sex = input$sex,
-        cov.age = input$age,
-        cov.sep = input$sep,
-        cov.puberty =input$puberty
-      )
-      print(predict(
-        model.bf, 
-        newdata = nd0, # list
-        interval = "confidence"
-      ))
-      
-      # print(x0_init)
-      # print(nd0)
-      
-      
+      if (debug_mode) {
+        print(out_init)
+      }
       
       return(out_init)
       
@@ -280,7 +236,7 @@ options(shiny.error = browser)
     
     
   # Define predictions for reallocation composition
-    reall.pred.bf <- reactive({
+    reall_pred_bf <- reactive({
       
       realloc_ilrs <- ilr(Rcomp())
       names(realloc_ilrs) <- paste0("ilr", 1:length(realloc_ilrs))
@@ -292,36 +248,19 @@ options(shiny.error = browser)
       out_hi <- get_pred_bounds(beta_ln_bf, x0_realloc, vcov_ln_bf, resdf_ln_bf, bound = +1, alpha = 0.05)
       
       out_realloc <- c(out_pr, out_lo, out_hi)
-      print(out_realloc)
       out_realloc <- exp(out_realloc) # because log transformed outcome
+    
+      if (debug_mode) {
+        print(out_realloc)
+      }
       
-      out <- 
-        predict(
-          model.bf, 
-          newdata = list(
-            ilr1=ilr(Rcomp())[1],
-            ilr2=ilr(Rcomp())[2], 
-            ilr3=ilr(Rcomp())[3],
-            ilr4=ilr(Rcomp())[4],
-            ilr5=ilr(Rcomp())[5],
-            ilr6=ilr(Rcomp())[6],
-            cov.sex = input$sex,
-            cov.age = input$age,
-            cov.sep = input$sep,
-            cov.puberty =input$puberty
-          ),  #list
-          interval = "confidence"
-        )  #predict
-      out <- out[1, ]
-      print(out)
-      
-
       return(out_realloc)
+      
     })
 
     
     # Define predictions for reallocation composition
-    delta.pred.bf <- reactive({
+    delta_pred_bf <- reactive({
       
       
       init_ilrs <- ilr(init.comp())
@@ -333,17 +272,20 @@ options(shiny.error = browser)
       x0_delta <- 
         make_x0(beta_ln_bf, init_ilrs, input$sex, input$age, input$sep, input$puberty) -
         make_x0(beta_ln_bf, realloc_ilrs, input$sex, input$age, input$sep, input$puberty) 
-      print(x0_delta)
       
       out_pr <- get_pred_bounds(beta_ln_bf, x0_delta, vcov_ln_bf, resdf_ln_bf, bound =  0, alpha = 0.05)
       out_lo <- get_pred_bounds(beta_ln_bf, x0_delta, vcov_ln_bf, resdf_ln_bf, bound = -1, alpha = 0.05)
       out_hi <- get_pred_bounds(beta_ln_bf, x0_delta, vcov_ln_bf, resdf_ln_bf, bound = +1, alpha = 0.05)
       
       out_delta <- c(out_pr, out_lo, out_hi)
-      print(out_delta)
-      out_delta <- exp(out_delta) # because log transformed outcome
+      exp_out_delta <- exp(out_delta) # because log transformed outcome
       
-      return(out_delta)
+      if (debug_mode) {
+        print(x0_delta)
+        print(out_delta)
+      }
+      
+      return(exp_out_delta)
     })
     
   # Compute difference between initial and reallocated predictions
@@ -355,29 +297,16 @@ options(shiny.error = browser)
     })
     
     output$specific.new <- renderText({
-      pred_reall <- reall.pred.bf()
+      pred_reall <- reall_pred_bf()
       sprintf("%3.1f%% [%3.1f:%3.1f]", pred_reall[1], pred_reall[2], pred_reall[3])
     })
     
-    
     output$specific.diff <- renderText({
-      pred_delta <- delta.pred.bf()
+      pred_delta <- delta_pred_bf()
       sprintf("%3.1f%% [%3.1f:%3.1f]", pred_delta[1], pred_delta[2], pred_delta[3])
     })
+
     
-    # delta.pred <- reactive({
-    #   pred_init <- init.pred.bf()
-    #   pred_reall <- reall.pred.bf()
-    #   pred_reall[1] - pred_init[1]
-    # })
-    # 
-    # output$specific.diff <- renderText({
-    #   sprintf("%3.1f%%", delta.pred())
-    # })
-  
-    
-     
-     
      
      
 # Define session behaviour and error messages
