@@ -199,7 +199,7 @@ options(shiny.error = browser)
     output$d3hist <- renderD3({
       r2d3(
         d3.data(),
-        script = "script.js",  # and here we call the script,
+        script = "javascript/script.js",  # and here we call the script,
         d3_version="5"
       )  # r2d3
     })  # renderD3
