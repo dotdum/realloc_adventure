@@ -5,5 +5,5 @@
 *.sh
 *.Rproj
 .Rproj.user
-dat/*
-
+old-dat/*
+tests/*
