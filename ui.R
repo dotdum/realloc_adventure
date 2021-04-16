@@ -192,28 +192,39 @@
   		        value = 0, min = -60, max = 60, ticks = FALSE
   		      ),  # sliderInput.Domestic_SelfCare
   		      div(textOutput("err2"), style = "color: red"),  
-  		      div(textOutput("err3"), style = "color: orange")
-          ),# box.changetime,
+  		      div(textOutput("err3"), style = "color: orange"),
   		    actionButton("reset_sliders", label = "Reset sliders")
-  		  ), # column.left
+          ),# box.changetime,
+    		box(width = 12, align = "center",
+    		  d3Output("d3hist", width = "100%", height = "520px")
+    		) # box.d3hist
+  		  ), # column.left  		       
   
   		# d3 Histogram
   		column(width = 6,
-  		       box(width = 12, align = "center",
-  		           d3Output("d3hist", width = "100%", height = "520px")
-  		       ), # box.d3hist
+
   		       
   		 ##OUTCOMES      
-  		# Estimated current
-  		    box(title = "Initial Composition", width = 6, align = "left",
-  		      valueBox(textOutput("specific.current"),"Estimated Body Fat% [95%CI]", width = 12)) , # box.outcome1
-  		#Estimated new
-  		      box(title = "New Composition", width = 6, align = "center",
-  		          valueBox(textOutput("specific.new"), "Estimated Body Fat% [95%CI]", width = 12)),# box.outcome2
-  		#Estimated difference between new and current %BF predictions
-  		box(title = "", width = 12, align = "right",
-  		    valueBox(textOutput("specific.diff"), "Difference", width = 12))# box.outcome3
-  		  )  # column.right
+
+    	box(title = "Predicitons (initial and re-allocations)", width = 12,
+    	    plotOutput("pred_plot_1")
+    	),
+    	box(title = "Predicited difference (re-allocation - initial)", width = 12,
+    	    plotOutput("pred_plot_2")
+    	) #, # box.outcome2  		
+  		 # Estimated current
+  # 	    box(title = "Initial Composition", width = 6, align = "left",
+  # 	      valueBox(textOutput("specific.current"),"Estimated Body Fat% [95%CI]", width = 12)
+  # 	    ), # box.outcome1
+  # 	#Estimated new
+  # 	    box(title = "New Composition", width = 6, align = "center",
+  # 	      valueBox(textOutput("specific.new"), "Estimated Body Fat% [95%CI]", width = 12)
+  #       ),
+  # 		#Estimated difference between new and current %BF predictions
+  #   		box(title = "", width = 12, align = "right",
+  #   		    valueBox(textOutput("specific.diff"), "Difference", width = 12)
+          #) box.outcome3
+   		  ) # column.right
   		)	# time-tab
     )  # tabItems
   )  # dashboardBody

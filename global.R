@@ -11,6 +11,7 @@ require(compositions)
 require(r2d3)
 require(robustbase)
 require(foreach)
+require(dplyr)
 
 ####################################
 ### set this TRUE for debug mode ###

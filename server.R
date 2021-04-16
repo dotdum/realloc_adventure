@@ -291,23 +291,96 @@ options(shiny.error = browser)
   # Compute difference between initial and reallocated predictions
    
   # Reallocation results
-    output$specific.current <- renderText({
+    # output$specific.current <- renderText({
+    #   pred_init <- init_pred_bf()
+    #   sprintf("%3.1f%% [%3.1f:%3.1f]", pred_init[1], pred_init[2], pred_init[3])
+    # })
+    # 
+    # output$specific.new <- renderText({
+    #   pred_reall <- reall_pred_bf()
+    #   sprintf("%3.1f%% [%3.1f:%3.1f]", pred_reall[1], pred_reall[2], pred_reall[3])
+    # })
+    # 
+    # output$specific.diff <- renderText({
+    #   pred_delta <- delta_pred_bf()
+    #   sprintf("%3.1f%% [%3.1f:%3.1f]", pred_delta[1], pred_delta[2], pred_delta[3])
+    # })
+    
+    output$pred_plot_1 <- renderPlot({
+      
       pred_init <- init_pred_bf()
-      sprintf("%3.1f%% [%3.1f:%3.1f]", pred_init[1], pred_init[2], pred_init[3])
-    })
-    
-    output$specific.new <- renderText({
       pred_reall <- reall_pred_bf()
-      sprintf("%3.1f%% [%3.1f:%3.1f]", pred_reall[1], pred_reall[2], pred_reall[3])
-    })
-    
-    output$specific.diff <- renderText({
       pred_delta <- delta_pred_bf()
-      sprintf("%3.1f%% [%3.1f:%3.1f]", pred_delta[1], pred_delta[2], pred_delta[3])
+      
+      plot_dat <-
+        tibble(
+          outc = rep("(a) fat", 2),
+          pred_cat = c(" Predicitons", " Predicitons"),
+          pred_type = c("(1) initial", "(2) re-allocation"),
+        ) %>%
+        bind_cols(
+          .,
+          as.data.frame(rbind(round(pred_init, 1), round(pred_reall, 1)))
+        )
+      
+      if (debug_mode) {
+        print(plot_dat)
+      }
+      
+      plot_dat %>% 
+        ggplot(., aes(x = pred_type, y = V1, col = outc)) +
+        geom_point(size = 3) +
+        geom_errorbar(aes(ymin = V2, ymax = V3), width = 0.1, linetype = 2) +
+        theme_bw() +
+        facet_grid(outc ~ pred_cat, scales = "free") +
+        labs(
+          x = "Prediction type",
+          y = "Predicted value",
+          col = "Outcome"
+        )
+      
     })
-
     
-     
+    output$pred_plot_2 <- renderPlot({
+      
+      pred_init <- init_pred_bf()
+      pred_reall <- reall_pred_bf()
+      pred_delta <- delta_pred_bf()
+      
+      plot_dat <-
+        tibble(
+          outc = rep("(a) fat", 1),
+          pred_cat = c("Predcited Difference"),
+          pred_type = c("Difference"),
+        ) %>%
+        bind_cols(
+          .,
+          as.data.frame(round(t(pred_delta), 1))
+        )
+      
+      if (debug_mode) {
+        print(plot_dat)
+      }
+      
+      ylo <- min(0, min(plot_dat$V2))
+      yhi <- max(0, max(plot_dat$V3))
+      
+      plot_dat %>% 
+        ggplot(., aes(x = outc, y = V1, col = outc)) +
+        geom_hline(yintercept = 0, alpha = 0.5) +
+        geom_point(size = 3) +
+        geom_errorbar(aes(ymin = V2, ymax = V3), width = 0.1, linetype = 2) +
+        theme_bw() +
+        ylim(ylo, yhi) +
+        # facet_grid(outc ~ pred_cat, scales = "free") +
+        labs(
+          x = "Prediction type",
+          y = "Predicted difference",
+          col = "Outcome"
+        )
+      
+    })
+    
      
 # Define session behaviour and error messages
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
