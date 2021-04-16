@@ -22,7 +22,7 @@ debug_mode <- TRUE
 # Define model objects
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 # Source model elements
-rdat_fls <- "dat/lm_ln_bf.RData"
+rdat_fls <- c("dat/lm_ln_fat.RData", "dat/lm_psy.RData", "dat/lm_aca.RData")
 
 fl_exists <- file.exists(rdat_fls)
 if (!all(fl_exists)) {

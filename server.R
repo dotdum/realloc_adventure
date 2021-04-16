@@ -12,6 +12,10 @@ options(shiny.error = browser)
 # Reactive objects based on user data from the participant-tab
     
   # Define initial times (hours plus minutes)
+    
+    
+    # ---- composition_funcs ----
+    
     init.time <- reactive({
       
       init_df <-
@@ -212,16 +216,23 @@ options(shiny.error = browser)
  ##model for %Body fat  
   # Define predictions for initial composition
     
-    init_pred_bf <- reactive({
+    
+    
+    
+    
+    # ---- fat_outc ----
+    
+    
+    init_pred_fat <- reactive({
       
       init_ilrs <- ilr(init.comp())
       names(init_ilrs) <- paste0("ilr", 1:length(init_ilrs))
       
-      x0_init <- make_x0(beta_ln_bf, init_ilrs, input$sex, input$age, input$sep, input$puberty) 
+      x0_init <- make_x0(beta_ln_fat, init_ilrs, input$sex, input$age, input$sep, input$puberty) 
 
-      out_pr <- get_pred_bounds(beta_ln_bf, x0_init, vcov_ln_bf, resdf_ln_bf, bound =  0, alpha = 0.05)
-      out_lo <- get_pred_bounds(beta_ln_bf, x0_init, vcov_ln_bf, resdf_ln_bf, bound = -1, alpha = 0.05)
-      out_hi <- get_pred_bounds(beta_ln_bf, x0_init, vcov_ln_bf, resdf_ln_bf, bound = +1, alpha = 0.05)
+      out_pr <- get_pred_bounds(beta_ln_fat, x0_init, vcov_ln_fat, resdf_ln_fat, bound =  0, alpha = 0.05)
+      out_lo <- get_pred_bounds(beta_ln_fat, x0_init, vcov_ln_fat, resdf_ln_fat, bound = -1, alpha = 0.05)
+      out_hi <- get_pred_bounds(beta_ln_fat, x0_init, vcov_ln_fat, resdf_ln_fat, bound = +1, alpha = 0.05)
       
       out_init <- c(out_pr, out_lo, out_hi)
       out_init <- exp(out_init) # because log transformed outcome
@@ -236,16 +247,16 @@ options(shiny.error = browser)
     
     
   # Define predictions for reallocation composition
-    reall_pred_bf <- reactive({
+    reall_pred_fat <- reactive({
       
       realloc_ilrs <- ilr(Rcomp())
       names(realloc_ilrs) <- paste0("ilr", 1:length(realloc_ilrs))
       
-      x0_realloc <- make_x0(beta_ln_bf, realloc_ilrs, input$sex, input$age, input$sep, input$puberty) 
+      x0_realloc <- make_x0(beta_ln_fat, realloc_ilrs, input$sex, input$age, input$sep, input$puberty) 
       
-      out_pr <- get_pred_bounds(beta_ln_bf, x0_realloc, vcov_ln_bf, resdf_ln_bf, bound =  0, alpha = 0.05)
-      out_lo <- get_pred_bounds(beta_ln_bf, x0_realloc, vcov_ln_bf, resdf_ln_bf, bound = -1, alpha = 0.05)
-      out_hi <- get_pred_bounds(beta_ln_bf, x0_realloc, vcov_ln_bf, resdf_ln_bf, bound = +1, alpha = 0.05)
+      out_pr <- get_pred_bounds(beta_ln_fat, x0_realloc, vcov_ln_fat, resdf_ln_fat, bound =  0, alpha = 0.05)
+      out_lo <- get_pred_bounds(beta_ln_fat, x0_realloc, vcov_ln_fat, resdf_ln_fat, bound = -1, alpha = 0.05)
+      out_hi <- get_pred_bounds(beta_ln_fat, x0_realloc, vcov_ln_fat, resdf_ln_fat, bound = +1, alpha = 0.05)
       
       out_realloc <- c(out_pr, out_lo, out_hi)
       out_realloc <- exp(out_realloc) # because log transformed outcome
@@ -260,7 +271,7 @@ options(shiny.error = browser)
 
     
     # Define predictions for reallocation composition
-    delta_pred_bf <- reactive({
+    delta_pred_fat <- reactive({
       
       
       init_ilrs <- ilr(init.comp())
@@ -270,15 +281,15 @@ options(shiny.error = browser)
       names(realloc_ilrs) <- paste0("ilr", 1:length(realloc_ilrs))
       
       x0_delta <- 
-        make_x0(beta_ln_bf, init_ilrs, input$sex, input$age, input$sep, input$puberty) -
-        make_x0(beta_ln_bf, realloc_ilrs, input$sex, input$age, input$sep, input$puberty) 
+        make_x0(beta_ln_fat, realloc_ilrs, input$sex, input$age, input$sep, input$puberty) -
+        make_x0(beta_ln_fat, init_ilrs, input$sex, input$age, input$sep, input$puberty) 
       
-      out_pr <- get_pred_bounds(beta_ln_bf, x0_delta, vcov_ln_bf, resdf_ln_bf, bound =  0, alpha = 0.05)
-      out_lo <- get_pred_bounds(beta_ln_bf, x0_delta, vcov_ln_bf, resdf_ln_bf, bound = -1, alpha = 0.05)
-      out_hi <- get_pred_bounds(beta_ln_bf, x0_delta, vcov_ln_bf, resdf_ln_bf, bound = +1, alpha = 0.05)
+      out_pr <- get_pred_bounds(beta_ln_fat, x0_delta, vcov_ln_fat, resdf_ln_fat, bound =  0, alpha = 0.05)
+      out_lo <- get_pred_bounds(beta_ln_fat, x0_delta, vcov_ln_fat, resdf_ln_fat, bound = -1, alpha = 0.05)
+      out_hi <- get_pred_bounds(beta_ln_fat, x0_delta, vcov_ln_fat, resdf_ln_fat, bound = +1, alpha = 0.05)
       
       out_delta <- c(out_pr, out_lo, out_hi)
-      exp_out_delta <- exp(out_delta) # because log transformed outcome
+      exp_out_delta <- c(out_pr, out_pr-1, out_pr+1) # exp(out_delta) # because log transformed outcome
       
       if (debug_mode) {
         print(x0_delta)
@@ -288,39 +299,202 @@ options(shiny.error = browser)
       return(exp_out_delta)
     })
     
+    
+    # ---- psy_outc ----
+    
+    
+    init_pred_psy <- reactive({
+      
+      init_ilrs <- ilr(init.comp())
+      names(init_ilrs) <- paste0("ilr", 1:length(init_ilrs))
+      
+      x0_init <- make_x0(beta_psy, init_ilrs, input$sex, input$age, input$sep, input$puberty) 
+      
+      out_pr <- get_pred_bounds(beta_psy, x0_init, vcov_psy, resdf_psy, bound =  0, alpha = 0.05)
+      out_lo <- get_pred_bounds(beta_psy, x0_init, vcov_psy, resdf_psy, bound = -1, alpha = 0.05)
+      out_hi <- get_pred_bounds(beta_psy, x0_init, vcov_psy, resdf_psy, bound = +1, alpha = 0.05)
+      
+      out_init <- c(out_pr, out_lo, out_hi)
+      
+      if (debug_mode) {
+        print(out_init)
+      }
+      
+      return(out_init)
+      
+    })
+    
+    
+    # Define predictions for reallocation composition
+    reall_pred_psy <- reactive({
+      
+      realloc_ilrs <- ilr(Rcomp())
+      names(realloc_ilrs) <- paste0("ilr", 1:length(realloc_ilrs))
+      
+      x0_realloc <- make_x0(beta_psy, realloc_ilrs, input$sex, input$age, input$sep, input$puberty) 
+      
+      out_pr <- get_pred_bounds(beta_psy, x0_realloc, vcov_psy, resdf_psy, bound =  0, alpha = 0.05)
+      out_lo <- get_pred_bounds(beta_psy, x0_realloc, vcov_psy, resdf_psy, bound = -1, alpha = 0.05)
+      out_hi <- get_pred_bounds(beta_psy, x0_realloc, vcov_psy, resdf_psy, bound = +1, alpha = 0.05)
+      
+      out_realloc <- c(out_pr, out_lo, out_hi)
+      
+      if (debug_mode) {
+        print(out_realloc)
+      }
+      
+      return(out_realloc)
+      
+    })
+    
+    
+    # Define predictions for reallocation composition
+    delta_pred_psy <- reactive({
+      
+      
+      init_ilrs <- ilr(init.comp())
+      names(init_ilrs) <- paste0("ilr", 1:length(init_ilrs))
+      
+      realloc_ilrs <- ilr(Rcomp())
+      names(realloc_ilrs) <- paste0("ilr", 1:length(realloc_ilrs))
+      
+      x0_delta <- 
+        make_x0(beta_psy, realloc_ilrs, input$sex, input$age, input$sep, input$puberty) -
+        make_x0(beta_psy, init_ilrs, input$sex, input$age, input$sep, input$puberty) 
+      
+      out_pr <- get_pred_bounds(beta_psy, x0_delta, vcov_psy, resdf_psy, bound =  0, alpha = 0.05)
+      out_lo <- get_pred_bounds(beta_psy, x0_delta, vcov_psy, resdf_psy, bound = -1, alpha = 0.05)
+      out_hi <- get_pred_bounds(beta_psy, x0_delta, vcov_psy, resdf_psy, bound = +1, alpha = 0.05)
+      
+      out_delta <- c(out_pr, out_lo, out_hi)
+      
+      if (debug_mode) {
+        print(x0_delta)
+        print(out_delta)
+      }
+      
+      return(out_delta)
+    })
+    
+    
+    # ---- aca_outc ----
+    
+    
+    init_pred_aca <- reactive({
+      
+      init_ilrs <- ilr(init.comp())
+      names(init_ilrs) <- paste0("ilr", 1:length(init_ilrs))
+      
+      x0_init <- make_x0(beta_aca, init_ilrs, input$sex, input$age, input$sep, input$puberty) 
+      
+      out_pr <- get_pred_bounds(beta_aca, x0_init, vcov_aca, resdf_aca, bound =  0, alpha = 0.05)
+      out_lo <- get_pred_bounds(beta_aca, x0_init, vcov_aca, resdf_aca, bound = -1, alpha = 0.05)
+      out_hi <- get_pred_bounds(beta_aca, x0_init, vcov_aca, resdf_aca, bound = +1, alpha = 0.05)
+      
+      out_init <- c(out_pr, out_lo, out_hi)
+      
+      if (debug_mode) {
+        print(out_init)
+      }
+      
+      return(out_init)
+      
+    })
+    
+    
+    # Define predictions for reallocation composition
+    reall_pred_aca <- reactive({
+      
+      realloc_ilrs <- ilr(Rcomp())
+      names(realloc_ilrs) <- paste0("ilr", 1:length(realloc_ilrs))
+      
+      x0_realloc <- make_x0(beta_aca, realloc_ilrs, input$sex, input$age, input$sep, input$puberty) 
+      
+      out_pr <- get_pred_bounds(beta_aca, x0_realloc, vcov_aca, resdf_aca, bound =  0, alpha = 0.05)
+      out_lo <- get_pred_bounds(beta_aca, x0_realloc, vcov_aca, resdf_aca, bound = -1, alpha = 0.05)
+      out_hi <- get_pred_bounds(beta_aca, x0_realloc, vcov_aca, resdf_aca, bound = +1, alpha = 0.05)
+      
+      out_realloc <- c(out_pr, out_lo, out_hi)
+      
+      if (debug_mode) {
+        print(out_realloc)
+      }
+      
+      return(out_realloc)
+      
+    })
+    
+    
+    # Define predictions for reallocation composition
+    delta_pred_aca <- reactive({
+      
+      
+      init_ilrs <- ilr(init.comp())
+      names(init_ilrs) <- paste0("ilr", 1:length(init_ilrs))
+      
+      realloc_ilrs <- ilr(Rcomp())
+      names(realloc_ilrs) <- paste0("ilr", 1:length(realloc_ilrs))
+      
+      x0_delta <- 
+        make_x0(beta_aca, realloc_ilrs, input$sex, input$age, input$sep, input$puberty) -
+        make_x0(beta_aca, init_ilrs, input$sex, input$age, input$sep, input$puberty) 
+      
+      out_pr <- get_pred_bounds(beta_aca, x0_delta, vcov_aca, resdf_aca, bound =  0, alpha = 0.05)
+      out_lo <- get_pred_bounds(beta_aca, x0_delta, vcov_aca, resdf_aca, bound = -1, alpha = 0.05)
+      out_hi <- get_pred_bounds(beta_aca, x0_delta, vcov_aca, resdf_aca, bound = +1, alpha = 0.05)
+      
+      out_delta <- c(out_pr, out_lo, out_hi)
+      
+      if (debug_mode) {
+        print(x0_delta)
+        print(out_delta)
+      }
+      
+      return(out_delta)
+    })
+    
+    
   # Compute difference between initial and reallocated predictions
    
   # Reallocation results
     # output$specific.current <- renderText({
-    #   pred_init <- init_pred_bf()
+    #   pred_init <- init_pred_fat()
     #   sprintf("%3.1f%% [%3.1f:%3.1f]", pred_init[1], pred_init[2], pred_init[3])
     # })
     # 
     # output$specific.new <- renderText({
-    #   pred_reall <- reall_pred_bf()
+    #   pred_reall <- reall_pred_fat()
     #   sprintf("%3.1f%% [%3.1f:%3.1f]", pred_reall[1], pred_reall[2], pred_reall[3])
     # })
     # 
     # output$specific.diff <- renderText({
-    #   pred_delta <- delta_pred_bf()
+    #   pred_delta <- delta_pred_fat()
     #   sprintf("%3.1f%% [%3.1f:%3.1f]", pred_delta[1], pred_delta[2], pred_delta[3])
     # })
     
     output$pred_plot_1 <- renderPlot({
       
-      pred_init <- init_pred_bf()
-      pred_reall <- reall_pred_bf()
-      pred_delta <- delta_pred_bf()
+      init_fat <- init_pred_fat()
+      reall_fat <- reall_pred_fat()
+      init_psy <- init_pred_psy()
+      reall_psy <- reall_pred_psy()
+      init_aca <- init_pred_aca()
+      reall_aca <- reall_pred_aca()
+
       
       plot_dat <-
         tibble(
-          outc = rep("(a) fat", 2),
-          pred_cat = c(" Predicitons", " Predicitons"),
-          pred_type = c("(1) initial", "(2) re-allocation"),
+          outc = rep(c("(a) fat", "(b) psy", "(c) aca"), each = 2),
+          pred_cat = rep("Predicitons", 6),
+          pred_type = rep(c("(1) initial", "(2) re-allocation"), 3),
         ) %>%
         bind_cols(
           .,
-          as.data.frame(rbind(round(pred_init, 1), round(pred_reall, 1)))
+          as.data.frame(rbind(
+            init_fat, reall_fat, 
+            init_psy, reall_psy, 
+            init_aca, reall_aca
+          ))
         )
       
       if (debug_mode) {
@@ -343,19 +517,21 @@ options(shiny.error = browser)
     
     output$pred_plot_2 <- renderPlot({
       
-      pred_init <- init_pred_bf()
-      pred_reall <- reall_pred_bf()
-      pred_delta <- delta_pred_bf()
+      delta_fat <- delta_pred_fat()
+      delta_psy <- delta_pred_psy()
+      delta_aca <- delta_pred_aca()
       
       plot_dat <-
         tibble(
-          outc = rep("(a) fat", 1),
-          pred_cat = c("Predcited Difference"),
-          pred_type = c("Difference"),
+          outc = c("(a) fat", "(b) psy", "(c) aca"),
+          pred_cat = rep("Predcited Difference", 3),
+          pred_type = rep("Difference", 3),
         ) %>%
         bind_cols(
           .,
-          as.data.frame(round(t(pred_delta), 1))
+          as.data.frame(rbind(
+            delta_fat, delta_psy, delta_aca
+          ))
         )
       
       if (debug_mode) {
