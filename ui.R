@@ -40,121 +40,135 @@
   		  
   		# Covariate and Initial Composition Input
   		  fluidRow(
-    			box(title = "General Information", width = 12, status = "primary",
-    			  column(width = 4,
+    			box(title = "General Information", width = 4, status = "primary",
+    			  column(width = 12,
     			    radioButtons("sex", "Sex", 
                 choices = list("Male" = 1, "Female" = 2), inline = TRUE
               )  # radioButtons.sex
     			  ), # column.sex
-            column(width = 4,
+            column(width = 6,
               numericInput("age", "Age (years)", 
                 value = 12
               )  # numericInput.age
             ), # column.age
-    			  column(width = 4,
+    			  column(width = 6,
     			    numericInput("sep", "SES (z-score)",
                 value = 0, min = -3, max = 3, step = 0.5
               )  # numericInput.sep
     			  ) , # column.sep
-    			  column(width = 4,
+    			  column(width = 12,
     			         radioButtons("puberty", "Pubertal Stage", 
     			                      choices = list("Pre-pubertal" = 1, "Early Puberty" = 2,
     			                                     "Mid-pubertal" = 3, "Late Puberty" = 4, "Post-pubertal" = 5), 
-    			                      selected=3, inline=TRUE
+    			                      selected=3, inline=FALSE
     			         )  # radioButtons.puberty
     			  )  # column.puberty
     			
-    		  )  # box.participant-input
-  		  ), # fluidRow.participant-input  
+    		  ),  # box.participant-input
+  		  # ), # fluidRow.participant-input  
   		  
-  		  fluidRow(
-    			box(title = "Please Provide Current Time Allocations", width = 6, status = "primary",
+  		  # fluidRow(
+    			box(title = "Please Provide Current Time Allocations", width = 8, status = "primary",
     			  fluidRow(
-    			    column(width = 8,
-    			      numericInput("initSleep", "Sleep (hours)",
+    			    column(width = 6,
+    			      strong("Sleep"),
+    			      numericInput("initSleep", "(hours)", width = "100%",
                   value = 11, step = 1, min = 0, max = 23
-  			        )  # numericInput.initSleep.hours
+  			        ),  # numericInput.initSleep.hours
     			    ),
-    			    column(width = 4,
-    			      numericInput("initSleepmin", "(mins)",
+    			    column(width = 6,
+    			      br(),
+    			      numericInput("initSleepmin", "(mins)", width = "100%",
     			        value = 50, step = 1, min = 0, max = 59
     			      )  # numericInput.initSleep.minutes
     			    )
     			  ),  # fluidRow.initSleep
     			  
     			  fluidRow(
-    			    column(width = 8,
-    			      numericInput("initScreen", "Screen (hours)",
+    			    column(width = 6,
+    			           strong("Screen"),
+    			      numericInput("initScreen", "(hours)", width = "100%",
                   value = 2, step = 1, min = 0, max = 23
   			        )  # numericInput.initScreen
     			    ),
-    			    column(width = 4,
-    			      numericInput("initScreenmin", "(mins)",
+    			    column(width = 6,
+    			           br(),
+    			      numericInput("initScreenmin", "(mins)", width = "100%",
                   value =55 , step = 1, min = 0, max = 59
   			        )  # numericInput.initScreen.minutes
     			    )
     			  ),  # fluidRow.initScreen
     			  
     			  fluidRow(
-    			    column(width = 8,
-      			    numericInput("initPA", "Physical Activity (hours)",
+    			    column(width = 6,
+    			           strong("Physical Activity"),
+      			    numericInput("initPA", "(hours)", width = "100%",
                   value = 1, step = 1, min = 0, max = 23
       			    ) # numericInput.initPA.hours
     			    ),
-    			    column(width = 4,
-    			      numericInput("initPAmin", "(mins)",
+    			    column(width = 6,
+    			           br(),
+    			      numericInput("initPAmin", "(mins)", width = "100%",
                   value = 57, step = 1, min = 0, max = 59
   			        )  # numericInput.initPA.minutes
     			    )
     			  ),  # fluidRow.initPA
     			  
     			  fluidRow(
-    			    column(width = 8,
-      			    numericInput("initQuietT", "Quiet Time (hours)",
+    			    column(width = 6,
+    			           strong("Quiet Time"),
+      			    numericInput("initQuietT", "(hours)", width = "100%",
                   value = 1, step = 1, min = 0, max = 23
       			    ) # numericInput.initQuietT
     			    ),
-    			    column(width = 4,
-    			      numericInput("initQuietTmin", "(mins)",
+    			    column(width = 6,
+    			           br(),
+    			      numericInput("initQuietTmin", "(mins)", width = "100%",
                   value = 11, step = 1, min = 0, max = 59
   			        )  # numericInput.initQuietT.minutes
     			    )
     			  ),  # fluidRow.initQuietT
     			  
     			  fluidRow(
-    			    column(width = 8,
-    			           numericInput("initPassiveTrans", "Passive Transport",
+    			    column(width = 6,
+    			           strong("Passive Transport"),
+    			           numericInput("initPassiveTrans", "(hours)", width = "100%",
     			                        value = 0, step = 1, min = 0, max = 23
     			           )  # numericInput.initPassiveTrans
     			    ),
-    			    column(width = 4,
-    			           numericInput("initPassiveTransmin", "(mins)",
+    			    column(width = 6,
+    			           br(),
+    			           numericInput("initPassiveTransmin", "(mins)", width = "100%",
     			                        value = 35, step = 1, min = 0, max = 59
     			           )  # numericInput.initPassiveTrans.minutes
     			    )
     			  ),  # fluidRow.initSchool
     			  
     			  fluidRow(
-    			    column(width = 8,
-      			    numericInput("initSchool", "School-Related",
+    			    column(width = 6,
+    			           strong("School-Related"),
+      			    numericInput("initSchool", "(hours)", width = "100%",
                   value = 2, step = 1, min = 0, max = 23
       			    )  # numericInput.initSchool
     			    ),
-    			    column(width = 4,
-    			      numericInput("initSchoolmin", "(mins)",
+    			    column(width = 6,
+    			           br(),
+    			      numericInput("initSchoolmin", "(mins)", width = "100%",
                   value = 9, step = 1, min = 0, max = 59
   			        )  # numericInput.initSchool.minutes
     			    )
     			  ),  # fluidRow.initSchool
     			  
     			  fluidRow(
-    			    column(width = 8,
-      			    numericInput("initDomestic_SelfCare", "Domestic & Self Care",
+    			    column(width = 6, 
+    			           strong("Domestic & Self Care"),
+      			    numericInput("initDomestic_SelfCare", "(hours)", width = "100%",
                   value = 3, step = 1, min = 0, max = 23
       			    )  # numericInput.initScreen
     			    ),
-    			    column(width = 4,
-    			      numericInput("initDomestic_SelfCaremin", "(mins)",
+    			    column(width = 6,
+    			           br(),
+    			      numericInput("initDomestic_SelfCaremin", "(mins)", width = "100%",
                   value = 23, step = 1, min = 0, max = 59
   			        )  # numericInput.initDomestic_SelfCare.minutes
     			    )

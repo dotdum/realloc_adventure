@@ -585,7 +585,7 @@ options(shiny.error = browser)
       fat_val <- perc_change_fat()
       if (is.na(fat_val) | is.null(fat_val)) fat_val <- 0
       pm <- ifelse(fat_val > 0, "+", "")
-      bx_col <- ifelse(fat_val > 0, "maroon", ifelse(fat_val < 0, "lime", "black")) 
+      bx_col <- ifelse(fat_val > 0, "red", ifelse(fat_val < 0, "green", "black")) 
       
       valueBox(
         value = paste0(pm, sprintf("%3.1f%%", fat_val)), 
@@ -599,7 +599,7 @@ options(shiny.error = browser)
       psy_val <- perc_change_psy()
       if (is.na(psy_val) | is.null(psy_val)) psy_val <- 0
       pm <- ifelse(psy_val > 0, "+", "")
-      bx_col <- ifelse(psy_val > 0, "lime", ifelse(psy_val < 0, "maroon", "black")) 
+      bx_col <- ifelse(psy_val > 0, "green", ifelse(psy_val < 0, "red", "black")) 
       
       valueBox(
         value = paste0(pm, sprintf("%3.1f%%", psy_val)), 
@@ -613,7 +613,7 @@ options(shiny.error = browser)
       aca_val <- perc_change_aca()
       if (is.na(aca_val) | is.null(aca_val)) aca_val <- 0
       pm <- ifelse(aca_val > 0, "+", "")
-      bx_col <- ifelse(aca_val > 0, "lime", ifelse(aca_val < 0, "maroon", "black")) 
+      bx_col <- ifelse(aca_val > 0, "green", ifelse(aca_val < 0, "red", "black")) 
       
       valueBox(
         value = paste0(pm, sprintf("%3.1f%%", aca_val)), 
