@@ -2,6 +2,7 @@
 # Objects that are not reactive are written here
 # -----------------------------------------------------------------------------
 # Load package libraries
+library(shiny)
 require(shinydashboard)
 require(ggplot2)
 require(compositions)
@@ -12,6 +13,7 @@ require(r2d3)
 require(robustbase)
 require(foreach)
 require(dplyr)
+library(shinyjs)
 
 ####################################
 ### set this TRUE for debug mode ###
@@ -34,11 +36,14 @@ if (!all(fl_exists)) {
     )
   )
 }
-# from "dat/lm_ln_bf.RData", load the objects: 
-#   "beta_ln_bf", 
-#   "vcov_ln_bf", 
-#   "resdf_ln_bf"
-load(rdat_fls[1]) 
+
+# from "dat/lm_ln_bf.RData", load the objects: beta_ln_bf, vcov_ln_bf, resdf_ln_bf
+# from "dat/lm_psy.RData", load the objects:     beta_psy,   vcov_psy,   resdf_psy
+# from "dat/lm_aca.RData", load the objects:     beta_aca,   vcov_aca,   resdf_aca
+for (f in rdat_fls) {
+  load(f)
+}
+
 
 # Define activity names and number of activities
 activity_nms <- c('Sleep', 'Screen', 'PA', 'QuietT', 'PassiveTrans', 'School', 'Domestic_SelfCare')
@@ -47,19 +52,28 @@ nact <- length(activity_nms)
 # Define error messages
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 # Negative composition error
-  err1.string <- paste0(
-    "Time allocation does not add up to 24 hours."
-  )
-  
-  err2.string <- paste0(
-    "Reallocated times must add up to zero hours."
-  )
+err1.string <- paste0(
+  "Time allocation does not add up to 24 hours."
+)
+
+err2.string <- paste0(
+  "Reallocated times must add up to zero hours."
+)
   
   
   ##need an error when you try to reallocate more than what's available (Cant get negative time...)
   
   
+# ---- UI_side_fns ----
   
+# toggle_plots <- function(x) {
+#   shinyjs::toggleElement("plot1", condition = function(x) {x %% 2 == 0} )
+# }
+  
+  
+  
+  
+# ---- server_side_fns ----
   
 sanitise_ilrs <- function(x) {
   

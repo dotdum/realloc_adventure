@@ -15,7 +15,7 @@
 # Determines how many tabs exist in the body of the ui
   sidebar <- dashboardSidebar(
   	width = 250, #Width of sidebar the same as width of header
-    
+  	useShinyjs(),
   # Sidebar options
     sidebarMenu(
   		menuItem("Current time-use composition", tabName = "participant-tab", 
@@ -198,20 +198,31 @@
     		box(width = 12, align = "center",
     		  d3Output("d3hist", width = "100%", height = "520px")
     		) # box.d3hist
-  		  ), # column.left  		       
+  		), # column.left  		       
   
   		# d3 Histogram
-  		column(width = 6,
+  		column(width = 6, align = "center",
+  		       uiOutput("ui1"),
+  		       uiOutput("ui2"),
+  		       uiOutput("ui3"),
 
-  		       
+  		  
   		 ##OUTCOMES      
-
-    	box(title = "Predicitons (initial and re-allocations)", width = 12,
-    	    plotOutput("pred_plot_1")
-    	),
-    	box(title = "Predicited difference (re-allocation - initial)", width = 12,
+  		box(id = "showhide", 
+  		     # title = "Predictions (initial and re-allocations)", 
+  		     width = 12,
+  		     actionButton(inputId = "sh_but", label = "show / hide advanced output")
+  		),
+    	box(id = "plot1", 
+    	    # title = "Predictions (initial and re-allocations)", 
+    	    width = 12,
+    	    plotOutput("pred_plot_1"),
     	    plotOutput("pred_plot_2")
-    	) #, # box.outcome2  		
+    	) #,
+    	# box(id = "plot2", 
+    	#     # title = "Predicted difference (re-allocation - initial)", 
+    	#     width = 12,
+    	# ) #, # box.outcome2  		
   		 # Estimated current
   # 	    box(title = "Initial Composition", width = 6, align = "left",
   # 	      valueBox(textOutput("specific.current"),"Estimated Body Fat% [95%CI]", width = 12)

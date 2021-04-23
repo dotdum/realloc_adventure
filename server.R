@@ -13,7 +13,7 @@ options(shiny.error = browser)
     
   # Define initial times (hours plus minutes)
     
-    
+    shinyjs::hide(id = "plot1")
     # ---- composition_funcs ----
     
     init.time <- reactive({
@@ -299,6 +299,8 @@ options(shiny.error = browser)
       return(exp_out_delta)
     })
     
+    perc_change_fat <- reactive({ 100 * delta_pred_fat()[1] })
+    
     
     # ---- psy_outc ----
     
@@ -375,6 +377,8 @@ options(shiny.error = browser)
       
       return(out_delta)
     })
+    
+    perc_change_psy <- reactive({ 100 * delta_pred_psy()[1] / init_pred_psy()[1] })
     
     
     # ---- aca_outc ----
@@ -453,6 +457,8 @@ options(shiny.error = browser)
       return(out_delta)
     })
     
+    perc_change_aca <- reactive({ 100 * delta_pred_aca()[1] / init_pred_aca()[1] })
+    
     
   # Compute difference between initial and reallocated predictions
    
@@ -471,6 +477,8 @@ options(shiny.error = browser)
     #   pred_delta <- delta_pred_fat()
     #   sprintf("%3.1f%% [%3.1f:%3.1f]", pred_delta[1], pred_delta[2], pred_delta[3])
     # })
+    
+    # ---- predictions ----
     
     output$pred_plot_1 <- renderPlot({
       
@@ -510,7 +518,9 @@ options(shiny.error = browser)
         labs(
           x = "Prediction type",
           y = "Predicted value",
-          col = "Outcome"
+          col = "Outcome",
+          title = "Predictions ",
+          subtitle = "(initial and re-allocations)"
         )
       
     })
@@ -552,12 +562,78 @@ options(shiny.error = browser)
         labs(
           x = "Prediction type",
           y = "Predicted difference",
-          col = "Outcome"
+          col = "Outcome",
+          title = "Predicted difference ",
+          subtitle = "(re-allocation - initial)"
         )
       
     })
     
-     
+    observeEvent(input$sh_but, {
+      print(input$sh_but)
+      if (is.null(input$sh_but)) {
+        shinyjs::hide(id = "plot1")
+      } else if (input$sh_but %% 2 == 0) {
+        shinyjs::hide(id = "plot1")
+      } else {
+        shinyjs::show(id = "plot1")
+      }
+      
+    })
+    
+    output$ui1 <- renderUI({
+      fat_val <- perc_change_fat()
+      if (is.na(fat_val) | is.null(fat_val)) fat_val <- 0
+      pm <- ifelse(fat_val > 0, "+", "")
+      bx_col <- ifelse(fat_val > 0, "maroon", ifelse(fat_val < 0, "lime", "black")) 
+      
+      valueBox(
+        value = paste0(pm, sprintf("%3.1f%%", fat_val)), 
+        subtitle = "Body fat change", 
+        width = 4, 
+        color = bx_col
+      )
+    })
+    
+    output$ui2 <- renderUI({
+      psy_val <- perc_change_psy()
+      if (is.na(psy_val) | is.null(psy_val)) psy_val <- 0
+      pm <- ifelse(psy_val > 0, "+", "")
+      bx_col <- ifelse(psy_val > 0, "lime", ifelse(psy_val < 0, "maroon", "black")) 
+      
+      valueBox(
+        value = paste0(pm, sprintf("%3.1f%%", psy_val)), 
+        subtitle = "Psycological change", 
+        width = 4, 
+        color = bx_col
+      )
+    })
+    
+    output$ui3 <- renderUI({
+      aca_val <- perc_change_aca()
+      if (is.na(aca_val) | is.null(aca_val)) aca_val <- 0
+      pm <- ifelse(aca_val > 0, "+", "")
+      bx_col <- ifelse(aca_val > 0, "lime", ifelse(aca_val < 0, "maroon", "black")) 
+      
+      valueBox(
+        value = paste0(pm, sprintf("%3.1f%%", aca_val)), 
+        subtitle = "Academic change", 
+        width = 4, 
+        color = bx_col
+      )
+    })
+    
+    
+    
+    # valueBox(value = sprintf("%3.1f%%", 3), subtitle = "Box 1", width = 4, color = "lime"),
+    # valueBox(value = sprintf("%3.1f%%", 3), subtitle = "Box 1", width = 4, color = "lime"),
+    # valueBox(
+    #   value = sprintf("%3.1f%%", perc_change_aca()), 
+    #   subtitle = "Academic change", 
+    #   width = 4, 
+    #   color = ifelse(1 > 0, "lime", "maroon")
+    # ),
+    
 # Define session behaviour and error messages
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Reactive objects handling errors and debug
