@@ -13,13 +13,18 @@ This is a Shiny App (interactive webpage) that allows the user to input their da
 The following steps will allow you to run the `realloc_adventure` Shiny App on your own computer:
 
 * Make sure you have [R](https://cran.r-project.org/) and [RStudio](https://www.rstudio.com/products/rstudio/download/) installed.
-* Go to the `Code` button on the top right of this page and then click `Download zip`.
+* Go to the `Code` button on the top right of this page and then click `Download zip` (see below screenshot).
+![](fig/code-dl.png)
 * Unzip the download.
 * Double click the `realloc_adventure.Rproj` file - this should open an RStudio session.
-![](fig/code-dl.png)
 * (only has to be performed once) Make sure the prerequisite packages are installed by running the below command in the R console:
 ```r
-install.packages(c("shiny", "shinydashboard", "compositions", "shinyjs", "dplyr", "ggplot2", "foreach", "r2d3"))
+install.packages(
+  c(
+    "shiny", "shinydashboard", "shinyjs", "r2d3", 
+    "compositions", "dplyr", "ggplot2", "foreach"
+  )
+)
 ```
 * Now to finally run the Shiny App by running the below command in the R console:
 ```r
