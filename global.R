@@ -1,6 +1,9 @@
 # global.R script for Time-Use Reallocation shinydashboard
 # Objects that are not reactive are written here
-# -----------------------------------------------------------------------------
+
+
+# ---- libs ----
+
 # Load package libraries
 library(shiny)
 require(shinydashboard)
@@ -11,15 +14,19 @@ library(plotly)
 library(compositions)
 library(foreach)
 
+
+# ---- debug boolean ----
+
 ####################################
 ### set this TRUE for debug mode ###
 ####################################
+
 debug_mode <- TRUE
 
 
-# Define model objects
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-# Source model elements
+# --- load rdata ----
+
+# Source pre-created model elements
 rdat_fls <- c("dat/lm_ln_fat.RData", "dat/lm_psy.RData", "dat/lm_aca.RData")
 
 fl_exists <- file.exists(rdat_fls)
@@ -45,8 +52,8 @@ for (f in rdat_fls) {
 activity_nms <- c('Sleep', 'Screen', 'PA', 'QuietT', 'PassiveTrans', 'School', 'Domestic_SelfCare')
 nact <- length(activity_nms)
 
-# Define error messages
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+# ---- define error messages ----
+
 # Negative composition error
 err1.string <- paste0(
   "Time allocation does not add up to 24 hours."
@@ -55,9 +62,6 @@ err1.string <- paste0(
 err2.string <- paste0(
   "Reallocated times must add up to zero hours."
 )
-  
-  
-  ##need an error when you try to reallocate more than what's available (Cant get negative time...)
   
   
 # ---- UI_side_fns ----
@@ -84,7 +88,6 @@ sanitise_ilrs <- function(x) {
   
 }
 
-  
 
 poly2 <- function(x) {
   
@@ -111,8 +114,6 @@ poly2 <- function(x) {
   return(cbind(x, sq_out))
   
 }
-
-
 
   
 
@@ -178,7 +179,6 @@ make_x0 <- function(betas, ilrs, sex, age, sep, pub) {
   
 }
 
-  
 
 get_pred_bounds <- function(betas, x0, beta_vcov, df, bound = 0, alpha = 0.05) {
   betas <- matrix(betas, ncol = 1)

@@ -8,7 +8,7 @@ This is a Shiny App (interactive webpage) that allows the user to input their da
 
 ## Using the Shiny App
 
-![Screenshot of the Shiny App](fig/ss1.png)
+![Screenshot of the Shiny App](fig/ss2.png)
 
 The following steps will allow you to run the `realloc_adventure` Shiny App (above screenshot) on your own computer:
 
@@ -21,8 +21,8 @@ The following steps will allow you to run the `realloc_adventure` Shiny App (abo
 ```r
 install.packages(
   c(
-    "shiny", "shinydashboard", "shinyjs", "r2d3", 
-    "compositions", "dplyr", "ggplot2", "foreach"
+    "shiny", "shinydashboard", "shinyjs", "dplyr", 
+    "ggplot2", "plotly", "compositions", "foreach"
   )
 )
 ```
