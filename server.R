@@ -179,35 +179,31 @@ options(shiny.error = browser)
     
     # Reactive composition output
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-    # Output for reactive d3 histogram
     
-    # Create reactive object to send to d3 script
-    d3.data <- reactive({
+    output$time_use_plot_1 <- renderPlotly({
       
-      # If less than an hour show in minutes
-      rounded.comp <- round(as.vector(Rcomp())*24, 1)
-      comp.units <- rep(" hours", length(rounded.comp))
-      comp.units[rounded.comp < 1] <- " mins"
-      rounded.comp[rounded.comp < 1] <- round(as.vector(Rcomp())*1440)[rounded.comp < 1]
+      hrs_comp <- as.numeric(Rcomp()) * 24
+      mins_comp <- hrs_comp * 60
       
-      # Output dataframe for d3 script
-      data.frame(
-        prop = as.vector(Rcomp())*2,  # affects maximal size of histogram columns
-        val = rounded.comp,  # rounded composition values
-        lab = activity_nms,  # labels for histogram
-        unit = comp.units  # composition units
+      prnts <- rep("", length(activity_nms))
+      txt_lbs <- sprintf("%2.1f hrs\n(%2.0f mins)", hrs_comp, mins_comp)
+      
+      if (debug_mode) {
+        # print(Rcomp())
+        # print(as.numeric(Rcomp()))
+        print(hrs_comp); print(mins_comp); print(prnts); print(txt_lbs)
+      }
+      
+      # https://plotly.com/r/treemaps/
+      plot_ly(
+        type = "treemap",
+        labels = activity_nms,
+        parents = prnts,
+        values = mins_comp,
+        text = txt_lbs
       )
-    })  # d3.data
     
-    # Call d3 script to make histogram
-    output$d3hist <- renderD3({
-      r2d3(
-        d3.data(),
-        script = "javascript/script.js",  # and here we call the script,
-        d3_version="5"
-      )  # r2d3
-    })  # renderD3
-    
+    })
     
   
 # Model Outcomes output
@@ -509,7 +505,7 @@ options(shiny.error = browser)
         print(plot_dat)
       }
       
-      plot_dat %>% 
+      {plot_dat %>% 
         ggplot(., aes(x = pred_type, y = V1, col = outc)) +
         geom_point(size = 3) +
         geom_errorbar(aes(ymin = V2, ymax = V3), width = 0.1, linetype = 2) +
@@ -521,7 +517,7 @@ options(shiny.error = browser)
           col = "Outcome",
           title = "Predictions ",
           subtitle = "(initial and re-allocations)"
-        )
+        )}  #%>% ggplotly(.)
       
     })
     

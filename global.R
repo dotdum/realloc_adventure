@@ -4,16 +4,12 @@
 # Load package libraries
 library(shiny)
 require(shinydashboard)
-require(ggplot2)
-require(compositions)
-#need old version of r2d3 or it doesn't work for the histogram
-#  packageurl <- "https://cran.r-project.org/src/contrib/Archive/r2d3/r2d3_0.2.3.tar.gz"
- # install.packages(packageurl, repos=NULL, type="source")
-require(r2d3)
-require(robustbase)
-require(foreach)
-require(dplyr)
 library(shinyjs)
+library(dplyr)
+library(ggplot2)
+library(plotly)
+library(compositions)
+library(foreach)
 
 ####################################
 ### set this TRUE for debug mode ###

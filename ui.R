@@ -210,7 +210,8 @@
   		    actionButton("reset_sliders", label = "Reset sliders")
           ),# box.changetime,
     		box(width = 12, align = "center",
-    		  d3Output("d3hist", width = "100%", height = "520px")
+    		  title = "New daily time composition",
+    		  plotlyOutput("time_use_plot_1"),
     		) # box.d3hist
   		), # column.left  		       
   

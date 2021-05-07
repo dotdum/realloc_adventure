@@ -10,7 +10,7 @@ This is a Shiny App (interactive webpage) that allows the user to input their da
 
 ![Screenshot of the Shiny App](fig/ss1.png)
 
-The following steps will allow you to run the `realloc_adventure` Shiny App on your own computer:
+The following steps will allow you to run the `realloc_adventure` Shiny App (above screenshot) on your own computer:
 
 * Make sure you have [R](https://cran.r-project.org/) and [RStudio](https://www.rstudio.com/products/rstudio/download/) installed.
 * Go to the `Code` button on the top right of this page and then click `Download zip` (see below screenshot).
