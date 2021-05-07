@@ -1,7 +1,7 @@
 # ui.R script for Time Reallocation shinydashboard 
 # The user-interface and widget input for the Shiny application is defined here
 # Sends user-defined input to server.R, calls created output from server.R
-# ------------------------------------------------------------------------------
+
 
 # ---- Header ----
 
