@@ -6,7 +6,7 @@
 # Header:
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
   header <- dashboardHeader(
-  	titleWidth = 250,
+  	titleWidth = 750,
     title = "Compositional Isotemporal Substitution: Time-Reallocation Interface"
   )  #dashboardHeader
   
@@ -14,18 +14,16 @@
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 # Determines how many tabs exist in the body of the ui
   sidebar <- dashboardSidebar(
-  	width = 250, #Width of sidebar the same as width of header
+  	width = 175, #Width of sidebar the same as width of header
   	useShinyjs(),
   # Sidebar options
     sidebarMenu(
-  		menuItem("Current time-use composition", tabName = "participant-tab", 
+  		menuItem("Initial time-use", tabName = "participant-tab", 
   		  icon = icon("child")
   		),  # menuItem.participant-tab
   		menuItem("Specify reallocations", tabName = "time-tab", 
   		  icon = icon("time", lib = "glyphicon")
-  		),  # menuItem.time-tab
-  		br(),
-  		div(style = "padding-left: 60px", actionButton("console", "Debug Console"))
+  		)  # menuItem.time-tab
     )  # sidebarMenu
     
   )  # dashboardSidebar
@@ -40,35 +38,22 @@
   		  
   		# Covariate and Initial Composition Input
   		  fluidRow(
-    			box(title = "General Information", width = 4, status = "primary",
+    			box(title = "General Information", width = 3, status = "primary",
     			  column(width = 12,
     			    radioButtons("sex", "Sex", 
-                choices = list("Male" = 1, "Female" = 2), inline = TRUE
+                choices = list("Male" = 1, "Female" = 2), inline = FALSE
               )  # radioButtons.sex
     			  ), # column.sex
-            column(width = 6,
+            column(width = 12,
               numericInput("age", "Age (years)", 
                 value = 12
               )  # numericInput.age
-            ), # column.age
-    			  column(width = 6,
-    			    numericInput("sep", "SES (z-score)",
-                value = 0, min = -3, max = 3, step = 0.5
-              )  # numericInput.sep
-    			  ) , # column.sep
-    			  column(width = 12,
-    			         radioButtons("puberty", "Pubertal Stage", 
-    			                      choices = list("Pre-pubertal" = 1, "Early Puberty" = 2,
-    			                                     "Mid-pubertal" = 3, "Late Puberty" = 4, "Post-pubertal" = 5), 
-    			                      selected=3, inline=FALSE
-    			         )  # radioButtons.puberty
-    			  )  # column.puberty
+            ) # column.age
     			
     		  ),  # box.participant-input
-  		  # ), # fluidRow.participant-input  
   		  
   		  # fluidRow(
-    			box(title = "Please Provide Current Time Allocations", width = 8, status = "primary",
+    			box(title = "Please Provide Current Time Allocations", width = 6, status = "primary",
     			  fluidRow(
     			    column(width = 6,
     			      strong("Sleep"),
@@ -171,12 +156,27 @@
     			      numericInput("initDomestic_SelfCaremin", "(mins)", width = "100%",
                   value = 23, step = 1, min = 0, max = 59
   			        )  # numericInput.initDomestic_SelfCare.minutes
-    			    )
+    			    ),
+    			    
     			  ), # fluidRow.initDomestic_SelfCare
     			  div(textOutput("err1"), style = "color: red")
-    			)# box.time-input
-  		  ) 
-  		), # participant-tab
+    			), # box.time-input
+  		  box(title = "Advanced Information", width = 3, status = "primary",
+  		     column(width = 12,
+  		             radioButtons("puberty", "Pubertal Stage", 
+  		                          choices = list("Pre-pubertal" = 1, "Early Puberty" = 2,
+  		                                         "Mid-pubertal" = 3, "Late Puberty" = 4, "Post-pubertal" = 5), 
+  		                          selected=3, inline=FALSE
+  		             )  # radioButtons.puberty
+  		      ),  # column.puberty column(width = 6,
+  		     column(width = 12,
+  		             numericInput("sep", "SES (z-score)",
+  		                          value = 0, min = -3, max = 3, step = 0.5
+  		             )  # numericInput.sep
+  		      )  # column.sep
+  		  )
+  		) # participant-tab
+  	),
       
   ### Time Re-Allocation Tab
   		tabItem(tabName = "time-tab",
@@ -217,19 +217,21 @@
   
   		# d3 Histogram
   		column(width = 6, align = "center",
+  		  box(id = "colour_out", 
+  		      width = 12,
   		       uiOutput("ui1"),
   		       uiOutput("ui2"),
-  		       uiOutput("ui3"),
+  		       uiOutput("ui3")
+  		    ),
 
   		  
   		 ##OUTCOMES      
   		box(id = "showhide", 
   		     # title = "Predictions (initial and re-allocations)", 
   		     width = 12,
-  		     actionButton(inputId = "sh_but", label = "show / hide advanced output")
+  		     actionButton(inputId = "sh_but", label = "show / hide advanced output"),
   		),
     	box(id = "plot1", 
-    	    # title = "Predictions (initial and re-allocations)", 
     	    width = 12,
     	    plotOutput("pred_plot_1"),
     	    plotOutput("pred_plot_2")

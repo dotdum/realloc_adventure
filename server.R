@@ -639,13 +639,6 @@ options(shiny.error = browser)
       stopApp()
     })
 
-  # Open console for R session
-    observe(label = "console", {
-      if(input$console != 0) {
-        options(browserNLdisabled = TRUE)
-        isolate(browser())
-      }
-    })
   
   }  #server
   
