@@ -190,7 +190,32 @@ get_pred_bounds <- function(betas, x0, beta_vcov, df, bound = 0, alpha = 0.05) {
   }
 }
   
+
+
+
+# For confidence intervals of the difference in lognormal predictions see:
+# Guang Yong Zou, Julia Taleban, Cindy Y. Huo (2009)
+# "Confidence interval estimation for lognormal data with application to health economics"
+# This implements equation (4) of Zou et al.
+diff_lognorm_cis <- function(m1, l1, u1, m2, l2, u2, r = 0) {
   
+  ctr <- m1 - m2
+  
+  marg_lo <- 
+    sqrt(
+      (m1 - l1) ^ 2 + (u2 - m2) ^ 2 - 2 * r * (m1 - l1) * (u2 - m2)
+    )
+  marg_hi <- 
+    sqrt(
+      (u1 - m1) ^ 2 + (m2 - l2) ^ 2 - 2 * r * (u1 - m1) * (m2 - l2)
+    )
+  
+  ci <- c(ctr - marg_lo, ctr + marg_hi)
+  
+  return(ci)
+  
+}
+
   
   
   

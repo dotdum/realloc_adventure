@@ -278,27 +278,71 @@ server <- function(input, output, session) {
     realloc_ilrs <- ilr(Rcomp())
     names(realloc_ilrs) <- paste0("ilr", 1:length(realloc_ilrs))
     
-    x0_delta <- 
-    make_x0(beta_ln_fat, realloc_ilrs, input$sex, input$age, input$sep, input$puberty) -
-    make_x0(beta_ln_fat, init_ilrs, input$sex, input$age, input$sep, input$puberty) 
+    print(init_ilrs); print(realloc_ilrs); print(init_ilrs - realloc_ilrs); 
     
-    out_pr <- get_pred_bounds(beta_ln_fat, x0_delta, vcov_ln_fat, resdf_ln_fat, bound =  0, alpha = 0.05)
-    out_lo <- get_pred_bounds(beta_ln_fat, x0_delta, vcov_ln_fat, resdf_ln_fat, bound = -1, alpha = 0.05)
-    out_hi <- get_pred_bounds(beta_ln_fat, x0_delta, vcov_ln_fat, resdf_ln_fat, bound = +1, alpha = 0.05)
+    # if the reallocation ilrs are the same as initial, then no prediction need be done
+    if (sum(abs(init_ilrs - realloc_ilrs)) < 1e-6) {
+      return(rep(0, 3))
+    }
     
-    out_delta <- c(out_pr, out_lo, out_hi)
-    exp_out_delta <- c(out_pr, out_pr-1, out_pr+1) # exp(out_delta) # because log transformed outcome
+    # for confidence intervals of the difference in lognormal predictions see:
+    # Guang Yong Zou, Julia Taleban, Cindy Y. Huo (2009)
+    # "Confidence interval estimation for lognormal data with application to health economics"
+    
+    
+    # let x_b be initial/before and x_a be after realloc
+    
+    # also note that if y1 and y2 have a bivariate normal distribution where
+    # (y1, y2) ~ N([mu1, m2], [se^2 x1^T (X^T X)^{-1} x1, se^2 x2^T (X^T X)^{-1} x2, rho]
+    # THEN rho = x1^T (X^T X)^{-1} x2 / sqrt(x1^T (X^T X)^{-1} x1) * sqrt(x2^T (X^T X)^{-1} x2)
+    
+    # pred vals exponentiated
+    exp_y_a <- reall_pred_fat()
+    exp_y_b <- init_pred_fat()
+    
+    # back to log scale and normally distributed
+    y_a <- log(exp_y_a)
+    y_b <- log(exp_y_b)
+    
+    # need these prediction coefficients to calculate correlation and variation
+    x_a <- make_x0(beta_ln_fat, realloc_ilrs, input$sex, input$age, input$sep, input$puberty)
+    x_b <- make_x0(beta_ln_fat, init_ilrs, input$sex, input$age, input$sep, input$puberty) 
+    
+    sigma_a <- sqrt(as.numeric(x_a %*% vcov_ln_fat %*% t(x_a)))
+    sigma_b <- sqrt(as.numeric(x_b %*% vcov_ln_fat %*% t(x_b)))
+    
+    # equations (8) and (9) of Zou et al.
+    rho <-
+      as.numeric(x_b %*% vcov_ln_fat %*% t(x_a)) / (sigma_a * sigma_b)
+
+    r <- 
+      (exp(rho * sigma_b * sigma_a) - 1) /
+        sqrt((exp(sigma_b ^ 2) - 1) * (exp(sigma_a ^ 2) - 1))
     
     if (debug_mode) {
-      print(x0_delta)
-      print(out_delta)
+      print(paste("rho:", rho))
+      print(paste("r:", r))
     }
+    
+    # equation (4) of Zou et al.
+    diff_ci <- 
+      diff_lognorm_cis(
+        m1 = exp_y_a[1], 
+        l1 = exp_y_a[2], 
+        u1 = exp_y_a[3], 
+        m2 = exp_y_b[1], 
+        l2 = exp_y_b[2], 
+        u2 = exp_y_b[3], 
+        r = r
+      )
+
+    exp_out_delta <- c(exp_y_a[1] - exp_y_b[1], diff_ci[1], diff_ci[2]) 
     
     return(exp_out_delta)
     
   })
   
-  perc_change_fat <- reactive({ 100 * delta_pred_fat()[1] })
+  perc_change_fat <- reactive({ 100 * delta_pred_fat()[1] / init_pred_fat()[1] })
   
   
   # ---- psy_outc ----
