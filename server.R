@@ -470,13 +470,15 @@ server <- function(input, output, session) {
     reall_psy <- reall_pred_psy()
     init_aca <- init_pred_aca()
     reall_aca <- reall_pred_aca()
+    outc_labs <- c("Body fat %", "Psycological score", "Academic score")
+    pred_type_labs <- c("Initial (before re-allocation)", "After re-allocation")
     
     
     plot_dat <-
       tibble(
-        outc = rep(c("(a) fat", "(b) psy", "(c) aca"), each = 2),
+        outc = rep(outc_labs, each = 2),
         pred_cat = rep("Predicitons", 6),
-        pred_type = rep(c("(1) initial", "(2) re-allocation"), 3)
+        pred_type = rep(pred_type_labs, 3)
       ) %>%
       bind_cols(
         .,
@@ -485,6 +487,17 @@ server <- function(input, output, session) {
           init_psy, reall_psy, 
           init_aca, reall_aca
         ))
+      )
+    
+    plot_dat$outc <- 
+      factor(
+        plot_dat$outc, 
+        levels = outc_labs
+      )
+    plot_dat$pred_type <- 
+      factor(
+        plot_dat$pred_type, 
+        levels = pred_type_labs
       )
     
     if (debug_mode) {
@@ -496,14 +509,15 @@ server <- function(input, output, session) {
       geom_point(size = 3) +
       geom_errorbar(aes(ymin = V2, ymax = V3), width = 0.1, linetype = 2) +
       theme_bw() +
-      facet_grid(outc ~ pred_cat, scales = "free") +
+      facet_grid(outc ~ ., scales = "free") +
       labs(
-        x = "Prediction type",
+        x = "Before or after time re-allocation",
         y = "Predicted value",
         col = "Outcome",
         title = "Predictions ",
         subtitle = "(initial and re-allocations)"
-      )  
+      ) +
+      theme(legend.position = "none")
   
   })
   
@@ -512,10 +526,11 @@ server <- function(input, output, session) {
     delta_fat <- delta_pred_fat()
     delta_psy <- delta_pred_psy()
     delta_aca <- delta_pred_aca()
+    outc_labs <- c("Body fat %", "Psycological score", "Academic score")
     
     plot_dat <-
       tibble(
-        outc = c("(a) fat", "(b) psy", "(c) aca"),
+        outc = outc_labs,
         pred_cat = rep("Predcited Difference", 3),
         pred_type = rep("Difference", 3)
       ) %>%
@@ -524,6 +539,12 @@ server <- function(input, output, session) {
         as.data.frame(rbind(
           delta_fat, delta_psy, delta_aca
         ))
+      )
+    
+    plot_dat$outc <- 
+      factor(
+        plot_dat$outc, 
+        levels = outc_labs
       )
     
     if (debug_mode) {
@@ -542,12 +563,13 @@ server <- function(input, output, session) {
       ylim(ylo, yhi) +
       # facet_grid(outc ~ pred_cat, scales = "free") +
       labs(
-        x = "Prediction type",
+        x = "Outcome",
         y = "Predicted difference",
         col = "Outcome",
         title = "Predicted difference ",
         subtitle = "(re-allocation - initial)"
-      )
+      ) +
+      theme(legend.position = "none")
   
   })
   
@@ -573,7 +595,7 @@ server <- function(input, output, session) {
     
     valueBox(
       value = paste0(pm, sprintf("%3.1f%%", fat_val)), 
-      subtitle = "Body fat change", 
+      subtitle = "Body fat % change", 
       width = 4, 
       color = bx_col
     )
