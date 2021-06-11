@@ -514,8 +514,8 @@ server <- function(input, output, session) {
     reall_psy <- reall_pred_psy()
     init_aca <- init_pred_aca()
     reall_aca <- reall_pred_aca()
-    outc_labs <- c("Body fat %", "Psycological score", "Academic score")
-    pred_type_labs <- c("Initial (before re-allocation)", "After re-allocation")
+    outc_labs <- c("Body fat (%)", "Psycological\n(scale score)", "Academic\n(NAPLAN score)")
+    pred_type_labs <- c("Initial\n(before re-allocation)", "After\nre-allocation")
     
     
     plot_dat <-
@@ -549,9 +549,9 @@ server <- function(input, output, session) {
     }
     
     plot_dat %>% 
-      ggplot(., aes(x = pred_type, y = V1, col = outc)) +
+      ggplot(., aes(x = pred_type, y = V1)) + #, col = outc
       geom_point(size = 3) +
-      geom_errorbar(aes(ymin = V2, ymax = V3), width = 0.1, linetype = 2) +
+      geom_errorbar(aes(ymin = V2, ymax = V3), width = 0.02, linetype = 1, alpha = 0.25) +
       theme_bw() +
       facet_grid(outc ~ ., scales = "free") +
       labs(
@@ -561,7 +561,7 @@ server <- function(input, output, session) {
         title = "Predictions ",
         subtitle = "(initial and re-allocations)"
       ) +
-      theme(legend.position = "none")
+      shiny_gg_theme() 
   
   })
   
@@ -570,7 +570,7 @@ server <- function(input, output, session) {
     delta_fat <- delta_pred_fat()
     delta_psy <- delta_pred_psy()
     delta_aca <- delta_pred_aca()
-    outc_labs <- c("Body fat %", "Psycological score", "Academic score")
+    outc_labs <- c("Body fat\n(%)", "Psycological\nhealth", "Academic\nperformance")
     
     plot_dat <-
       tibble(
@@ -599,21 +599,21 @@ server <- function(input, output, session) {
     yhi <- max(0, max(plot_dat$V3))
     
     plot_dat %>% 
-      ggplot(., aes(x = outc, y = V1, col = outc)) +
+      ggplot(., aes(x = outc, y = V1)) + # , col = outc
       geom_hline(yintercept = 0, alpha = 0.5) +
       geom_point(size = 3) +
-      geom_errorbar(aes(ymin = V2, ymax = V3), width = 0.1, linetype = 2) +
+      geom_errorbar(aes(ymin = V2, ymax = V3), width = 0.02, linetype = 1, alpha = 0.25) +
       theme_bw() +
       ylim(ylo, yhi) +
       # facet_grid(outc ~ pred_cat, scales = "free") +
       labs(
         x = "Outcome",
-        y = "Predicted difference",
+        y = "Estimated difference",
         col = "Outcome",
         title = "Predicted difference ",
-        subtitle = "(re-allocation - initial)"
+        subtitle = "(outcome at reallocation minus outcome at starting time-use)"
       ) +
-      theme(legend.position = "none")
+      shiny_gg_theme() 
   
   })
   

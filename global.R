@@ -218,7 +218,16 @@ diff_lognorm_cis <- function(m1, l1, u1, m2, l2, u2, r = 0) {
 
   
   
-  
+shiny_gg_theme <- function() {
+  theme(
+    legend.position = "none",
+    axis.title = element_text(size = 12),
+    axis.text = element_text(size = 12, colour = "grey50"),
+    strip.text = element_text(size = 12),
+    plot.title = element_text(size = 14),
+    plot.subtitle = element_text(size = 10, colour = "grey50")
+  ) 
+}
   
   
   
