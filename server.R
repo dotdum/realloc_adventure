@@ -514,7 +514,7 @@ server <- function(input, output, session) {
     reall_psy <- reall_pred_psy()
     init_aca <- init_pred_aca()
     reall_aca <- reall_pred_aca()
-    outc_labs <- c("Body fat (%)", "Psycological\n(scale score)", "Academic\n(NAPLAN score)")
+    outc_labs <- c("Body fat (%)", "Psychosocial\n(scale score)", "Academic\n(NAPLAN score)")
     pred_type_labs <- c("Initial\n(before re-allocation)", "After\nre-allocation")
     
     
@@ -551,7 +551,7 @@ server <- function(input, output, session) {
     plot_dat %>% 
       ggplot(., aes(x = pred_type, y = V1)) + #, col = outc
       geom_point(size = 3) +
-      geom_errorbar(aes(ymin = V2, ymax = V3), width = 0.02, linetype = 1, alpha = 0.25) +
+      geom_errorbar(aes(ymin = V2, ymax = V3), width = 0.06, linetype = 1, alpha = 0.75) +
       theme_bw() +
       facet_grid(outc ~ ., scales = "free") +
       labs(
@@ -570,7 +570,7 @@ server <- function(input, output, session) {
     delta_fat <- delta_pred_fat()
     delta_psy <- delta_pred_psy()
     delta_aca <- delta_pred_aca()
-    outc_labs <- c("Body fat\n(%)", "Psycological\nhealth", "Academic\nperformance")
+    outc_labs <- c("Body fat\n(%)", "Psychosocial\nhealth", "Academic\nperformance")
     
     plot_dat <-
       tibble(
@@ -600,9 +600,9 @@ server <- function(input, output, session) {
     
     plot_dat %>% 
       ggplot(., aes(x = outc, y = V1)) + # , col = outc
-      geom_hline(yintercept = 0, alpha = 0.5) +
+      geom_hline(yintercept = 0, alpha = 0.25) +
       geom_point(size = 3) +
-      geom_errorbar(aes(ymin = V2, ymax = V3), width = 0.02, linetype = 1, alpha = 0.25) +
+      geom_errorbar(aes(ymin = V2, ymax = V3), width = 0.06, linetype = 1, alpha = 0.75) +
       theme_bw() +
       ylim(ylo, yhi) +
       # facet_grid(outc ~ pred_cat, scales = "free") +
@@ -655,7 +655,7 @@ server <- function(input, output, session) {
     
     valueBox(
       value = paste0(pm, sprintf("%3.1f%%", psy_val)), 
-      subtitle = "Psycological change", 
+      subtitle = "Psychosocial change", 
       width = 4, 
       color = bx_col
     )
