@@ -557,7 +557,7 @@ server <- function(input, output, session) {
       labs(
         x = "Before or after time re-allocation",
         y = "Predicted value",
-        col = "Outcome",
+        col = "Health measure",
         title = "Predictions ",
         subtitle = "(initial and re-allocations)"
       ) +
@@ -607,11 +607,11 @@ server <- function(input, output, session) {
       ylim(ylo, yhi) +
       # facet_grid(outc ~ pred_cat, scales = "free") +
       labs(
-        x = "Outcome",
+        x = "Health measure",
         y = "Estimated difference",
-        col = "Outcome",
+        col = "Health measure",
         title = "Predicted difference ",
-        subtitle = "(outcome at reallocation minus outcome at starting time-use)"
+        subtitle = "(health measure at reallocation minus health measure at starting time-use)"
       ) +
       shiny_gg_theme() 
   
