@@ -21,7 +21,7 @@ library(foreach)
 ### set this TRUE for debug mode ###
 ####################################
 
-debug_mode <- TRUE
+debug_mode <- FALSE
 
 
 # --- load rdata ----

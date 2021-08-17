@@ -35,9 +35,17 @@ server <- function(input, output, session) {
     
     # check no NA values present: turn into 0s if so
     if (any(is.na(init_df))) {
-      print(init_df)
+      
+      if (debug_mode) {
+        print(init_df)
+      }
+      
       init_df[, c(is.na(init_df))] <- 0
-      print(init_df)
+      
+      if (debug_mode) {
+        print(init_df)
+      }
+      
     }
     
     # check for 0 values as we need to add 65% of min to those values for ilrs to work
@@ -196,9 +204,9 @@ server <- function(input, output, session) {
     txt_lbs <- sprintf("%2.1f hrs\n(%2.0f mins)", hrs_comp, mins_comp)
     
     if (debug_mode) {
-    # print(Rcomp())
-    # print(as.numeric(Rcomp()))
-    print(hrs_comp); print(mins_comp); print(prnts); print(txt_lbs)
+      # print(Rcomp())
+      # print(as.numeric(Rcomp()))
+      print(hrs_comp); print(mins_comp); print(prnts); print(txt_lbs)
     }
     
     # https://plotly.com/r/treemaps/
@@ -278,7 +286,11 @@ server <- function(input, output, session) {
     realloc_ilrs <- ilr(Rcomp())
     names(realloc_ilrs) <- paste0("ilr", 1:length(realloc_ilrs))
     
-    print(init_ilrs); print(realloc_ilrs); print(init_ilrs - realloc_ilrs); 
+    if (debug_mode) {
+      print(init_ilrs)
+      print(realloc_ilrs)
+      print(init_ilrs - realloc_ilrs)
+    }
     
     # if the reallocation ilrs are the same as initial, then no prediction need be done
     if (sum(abs(init_ilrs - realloc_ilrs)) < 1e-6) {
@@ -514,7 +526,7 @@ server <- function(input, output, session) {
     reall_psy <- reall_pred_psy()
     init_aca <- init_pred_aca()
     reall_aca <- reall_pred_aca()
-    outc_labs <- c("Body fat (%)", "Psychosocial\n(scale score)", "Academic\n(NAPLAN score)")
+    outc_labs <- c("Body fat (%)", "Psychosocial\n(scale score)", "Writing\n(NAPLAN score)")
     pred_type_labs <- c("Initial\n(before re-allocation)", "After\nre-allocation")
     
     
@@ -570,7 +582,7 @@ server <- function(input, output, session) {
     delta_fat <- delta_pred_fat()
     delta_psy <- delta_pred_psy()
     delta_aca <- delta_pred_aca()
-    outc_labs <- c("Body fat\n(%)", "Psychosocial\nhealth", "Academic\nperformance")
+    outc_labs <- c("Body fat\n(%)", "Psychosocial\nhealth", "Writing\nachievement")
     
     plot_dat <-
       tibble(
@@ -619,7 +631,10 @@ server <- function(input, output, session) {
   
   observeEvent(input$sh_but, {
     
-    print(input$sh_but)
+    if (debug_mode) {
+      print(input$sh_but)
+    }
+    
     if (is.null(input$sh_but)) {
       shinyjs::hide(id = "plot1")
     } else if (input$sh_but %% 2 == 0) {
@@ -671,7 +686,7 @@ server <- function(input, output, session) {
     
     valueBox(
       value = paste0(pm, sprintf("%3.1f%%", aca_val)), 
-      subtitle = "Academic change", 
+      subtitle = "Writing change", 
       width = 4, 
       color = bx_col
     )
