@@ -582,7 +582,7 @@ server <- function(input, output, session) {
     delta_fat <- delta_pred_fat()
     delta_psy <- delta_pred_psy()
     delta_aca <- delta_pred_aca()
-    outc_labs <- c("Body fat\n(%)", "Psychosocial\nhealth", "Writing\nachievement")
+    outc_labs <- c("Body fat\n(%)", "Psychosocial\nhealth", "Writing\nperformance")
     
     plot_dat <-
       tibble(
