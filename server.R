@@ -526,7 +526,7 @@ server <- function(input, output, session) {
     reall_psy <- reall_pred_psy()
     init_aca <- init_pred_aca()
     reall_aca <- reall_pred_aca()
-    outc_labs <- c("Body fat (%)", "Psychosocial\n(scale score)", "Writing\n(NAPLAN score)")
+    outc_labs <- c("Body fat (%)", "Psychosocial\n(scale score)", "Academic\n(NAPLAN\nwriting score)")
     pred_type_labs <- c("Initial\n(before re-allocation)", "After\nre-allocation")
     
     
@@ -582,7 +582,7 @@ server <- function(input, output, session) {
     delta_fat <- delta_pred_fat()
     delta_psy <- delta_pred_psy()
     delta_aca <- delta_pred_aca()
-    outc_labs <- c("Body fat\n(%)", "Psychosocial\nhealth", "Writing\nperformance")
+    outc_labs <- c("Body fat\n(%)", "Psychosocial\nhealth", "Academic\nperformance")
     
     plot_dat <-
       tibble(
@@ -686,7 +686,7 @@ server <- function(input, output, session) {
     
     valueBox(
       value = paste0(pm, sprintf("%3.1f%%", aca_val)), 
-      subtitle = "Writing change", 
+      subtitle = "Academic change", 
       width = 4, 
       color = bx_col
     )
