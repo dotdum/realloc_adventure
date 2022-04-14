@@ -70,7 +70,15 @@ err2.string <- paste0(
 #   shinyjs::toggleElement("plot1", condition = function(x) {x %% 2 == 0} )
 # }
   
-  
+disclaim_str <-
+  paste(
+    "*Differences in outcomes are not an indication of cause-and-effect",
+    "as underlying data are cross-sectional. Also, note, time-use data were",
+    "self-reported by study participants and may be subject to inaccuracies",
+    "and biases."
+  )
+
+inp_wdth <- 6
   
   
 # ---- server_side_fns ----

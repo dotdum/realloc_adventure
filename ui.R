@@ -47,7 +47,15 @@ body <- dashboardBody(
     
       # Covariate and Initial Composition Input
       fluidRow(
-        
+
+        tags$head(tags$style(HTML("
+        .form-control.shinyjs-resettable.shiny-bound-input {
+          width: 80px;
+        }
+        .control-label {
+          color: rgb(51,51,51);
+        }
+        "))), 
         # general input column (left)
         
         box(
@@ -76,15 +84,15 @@ body <- dashboardBody(
           
           fluidRow(
             column(
-              width = 6,
-              strong("Sleep"),
+              width = inp_wdth,
+              strong("Sleep", style = "color: rgb(51,51,51);"),
               numericInput(
                 "initSleep", "(hours)", width = "100%",
                 value = 11, step = 1, min = 0, max = 23
               ),  # numericInput.initSleep.hours
             ),
             column(
-              width = 6,
+              width = inp_wdth,
               br(),
               numericInput(
                 "initSleepmin", "(mins)", width = "100%",
@@ -95,15 +103,15 @@ body <- dashboardBody(
           
           fluidRow(
             column(
-              width = 6,
-              strong("Screen"),
+              width = inp_wdth,
+              strong("Screen", style = "color: rgb(51,51,51);"),
               numericInput(
                 "initScreen", "(hours)", width = "100%",
                 value = 2, step = 1, min = 0, max = 23
               )  # numericInput.initScreen
             ),
             column(
-              width = 6,
+              width = inp_wdth,
               br(),
               numericInput(
                 "initScreenmin", "(mins)", width = "100%",
@@ -114,15 +122,15 @@ body <- dashboardBody(
           
           fluidRow(
             column(
-              width = 6,
-              strong("Physical Activity"),
+              width = inp_wdth,
+              strong("Physical Activity", style = "color: rgb(51,51,51);"),
               numericInput(
                 "initPA", "(hours)", width = "100%",
                 value = 1, step = 1, min = 0, max = 23
               ) # numericInput.initPA.hours
             ),
             column(
-              width = 6,
+              width = inp_wdth,
               br(),
               numericInput(
                 "initPAmin", "(mins)", width = "100%",
@@ -133,15 +141,15 @@ body <- dashboardBody(
           
           fluidRow(
             column(
-              width = 6,
-              strong("Quiet Time"),
+              width = inp_wdth,
+              strong("Quiet Time", style = "color: rgb(51,51,51);"),
               numericInput(
                 "initQuietT", "(hours)", width = "100%",
                 value = 1, step = 1, min = 0, max = 23
               ) # numericInput.initQuietT
             ),
             column(
-              width = 6,
+              width = inp_wdth,
               br(),
               numericInput(
                 "initQuietTmin", "(mins)", width = "100%",
@@ -152,15 +160,15 @@ body <- dashboardBody(
           
           fluidRow(
             column(
-              width = 6,
-              strong("Passive Transport"),
+              width = inp_wdth,
+              strong("Passive Transport", style = "color: rgb(51,51,51);"),
               numericInput(
                 "initPassiveTrans", "(hours)", width = "100%",
                 value = 0, step = 1, min = 0, max = 23
               )  # numericInput.initPassiveTrans
             ),
             column(
-              width = 6,
+              width = inp_wdth,
               br(),
               numericInput(
                 "initPassiveTransmin", "(mins)", width = "100%",
@@ -171,15 +179,15 @@ body <- dashboardBody(
           
           fluidRow(
             column(
-              width = 6,
-              strong("School-Related"),
+              width = inp_wdth,
+              strong("School-Related", style = "color: rgb(51,51,51);"),
               numericInput(
                 "initSchool", "(hours)", width = "100%",
                 value = 2, step = 1, min = 0, max = 23
               )  # numericInput.initSchool
             ),
             column(
-              width = 6,
+              width = inp_wdth,
               br(),
               numericInput(
                 "initSchoolmin", "(mins)", width = "100%",
@@ -190,15 +198,15 @@ body <- dashboardBody(
           
           fluidRow(
             column(
-              width = 6, 
-              strong("Domestic & Self Care"),
+              width = inp_wdth, 
+              strong("Domestic & Self Care", style = "color: rgb(51,51,51);"),
               numericInput(
                 "initDomestic_SelfCare", "(hours)", width = "100%",
                 value = 3, step = 1, min = 0, max = 23
               )  # numericInput.initScreen
             ),
             column(
-              width = 6,
+              width = inp_wdth,
               br(),
               numericInput(
                 "initDomestic_SelfCaremin", "(mins)", width = "100%",
@@ -310,7 +318,12 @@ body <- dashboardBody(
           width = 12,
           plotOutput("pred_plot_1"),
           plotOutput("pred_plot_2")
-        )
+        ),
+        
+        br(),
+        br(),
+        p(disclaim_str, style = "font-size: 9pt;")
+        
       ) # column.right
     )	# time-tab
   )  # tabItems

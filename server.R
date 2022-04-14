@@ -654,7 +654,7 @@ server <- function(input, output, session) {
     
     valueBox(
       value = paste0(pm, sprintf("%3.1f%%", fat_val)), 
-      subtitle = "Body fat % change", 
+      subtitle = "Body fat % change*", 
       width = 4, 
       color = bx_col
     )
@@ -670,7 +670,7 @@ server <- function(input, output, session) {
     
     valueBox(
       value = paste0(pm, sprintf("%3.1f%%", psy_val)), 
-      subtitle = "Psychosocial change", 
+      subtitle = "Psychosocial change*", 
       width = 4, 
       color = bx_col
     )
@@ -686,7 +686,7 @@ server <- function(input, output, session) {
     
     valueBox(
       value = paste0(pm, sprintf("%3.1f%%", aca_val)), 
-      subtitle = "Academic change", 
+      subtitle = "Academic change*", 
       width = 4, 
       color = bx_col
     )
