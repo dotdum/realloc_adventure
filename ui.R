@@ -70,8 +70,12 @@ body <- dashboardBody(
           column(
             width = 12,
             numericInput(
-              "age", "Age (years)", 
-              value = 12
+              "age", 
+              "Age (years)", 
+              value = 12,
+              min = 10,
+              max = 13,
+              step = 1,
             )  # numericInput.age
           ) # column.age
     

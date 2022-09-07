@@ -245,6 +245,7 @@ server <- function(input, output, session) {
     out_init <- exp(out_init) # because log transformed outcome
     
     if (debug_mode) {
+      print(x0_init)
       print(out_init)
     }
     
@@ -269,6 +270,7 @@ server <- function(input, output, session) {
     out_realloc <- exp(out_realloc) # because log transformed outcome
     
     if (debug_mode) {
+      print(x0_realloc)
       print(out_realloc)
     }
     
@@ -374,6 +376,7 @@ server <- function(input, output, session) {
     out_init <- c(out_pr, out_lo, out_hi)
     
     if (debug_mode) {
+      print(x0_init)
       print(out_init)
     }
     
@@ -397,6 +400,7 @@ server <- function(input, output, session) {
     out_realloc <- c(out_pr, out_lo, out_hi)
     
     if (debug_mode) {
+      print(x0_realloc)
       print(out_realloc)
     }
     
@@ -453,6 +457,7 @@ server <- function(input, output, session) {
     out_init <- c(out_pr, out_lo, out_hi)
     
     if (debug_mode) {
+      print(x0_init)
       print(out_init)
     }
     
@@ -476,6 +481,7 @@ server <- function(input, output, session) {
     out_realloc <- c(out_pr, out_lo, out_hi)
     
     if (debug_mode) {
+      print(x0_realloc)
       print(out_realloc)
     }
     
