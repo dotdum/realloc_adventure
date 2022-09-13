@@ -69,13 +69,23 @@ body <- dashboardBody(
           ), # column.sex
           column(
             width = 12,
-            numericInput(
-              "age", 
-              "Age (years)", 
-              value = 12,
+            # tags$style(HTML("input:invalid {background-color: #FFCCCC;}")),
+            # numericInput(
+            #   "age",
+            #   "Age (years)",
+            #   value = 12,
+            #   min = 10,
+            #   max = 13,
+            #   step = 1,
+            # )  # numericInput.age
+            sliderInput(
+              "age",
+              "Age (years)",
               min = 10,
               max = 13,
+              value = 12,
               step = 1,
+              ticks = FALSE
             )  # numericInput.age
           ) # column.age
     
@@ -231,7 +241,7 @@ body <- dashboardBody(
           column(
             width = 12,
             radioButtons(
-              "puberty", "Pubertal Stage", 
+              "puberty", "Pubertal Stage (optional)", 
               choices = list("Pre-pubertal" = 1, "Early Puberty" = 2,
               "Mid-pubertal" = 3, "Late Puberty" = 4, "Post-pubertal" = 5), 
               selected=3, inline=FALSE
@@ -241,7 +251,7 @@ body <- dashboardBody(
           column(
             width = 12,
             numericInput(
-              "sep", "SES (z-score)",
+              "sep", "Socioeconomic z-score (optional)",
               value = 0, min = -3, max = 3, step = 0.5
             )  # numericInput.sep
           )  # column.sep
@@ -257,7 +267,7 @@ body <- dashboardBody(
       
       column(width = 6,
         box(
-          title = "Provide Time-Reallocations", width = 12, 
+          title = "Provide Time-Reallocations by moving sliders", width = 12, 
           sliderInput(
             "Sleep", "Sleep", 
             value = 0, min = -60, max = 60, ticks = FALSE

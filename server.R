@@ -209,6 +209,9 @@ server <- function(input, output, session) {
       print(hrs_comp); print(mins_comp); print(prnts); print(txt_lbs)
     }
     
+    # expand "PA" acronym
+    activity_nms[activity_nms == "PA"] <- "Physical Activity"
+    
     # https://plotly.com/r/treemaps/
     plot_ly(
       type = "treemap",
