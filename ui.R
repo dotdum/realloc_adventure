@@ -87,8 +87,10 @@ body <- dashboardBody(
               step = 1,
               ticks = FALSE
             )  # numericInput.age
-          ) # column.age
+          ), # column.age
     
+          div("Note: this app is best viewed on a computer with 1080p resolution or greater", style = "color: grey")
+          
         ),  # box.participant-input
     
       # time allocations input column (centre)
@@ -228,6 +230,9 @@ body <- dashboardBody(
               )  # numericInput.initDomestic_SelfCare.minutes
             ),
           ), # fluidRow.initDomestic_SelfCare
+          
+          # unfeasible error  msg 
+          # div(textOutput("err0"), style = "color: orange"),
           
           # error msg if not == 24 hours
           div(textOutput("err1"), style = "color: red")

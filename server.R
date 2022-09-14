@@ -20,10 +20,10 @@ server <- function(input, output, session) {
   # Reactive objects based on user data from the participant-tab
   # Define initial times (hours plus minutes)
   
-  init.time <- reactive({
+  init.raw <- reactive({
   
-    init_df <-
-        data.frame(
+    init_raw_df <-
+      data.frame(
         Sleep = input$initSleep + input$initSleepmin/60,
         Screen = input$initScreen + input$initScreenmin/60,
         PA = input$initPA + input$initPAmin/60,
@@ -34,19 +34,95 @@ server <- function(input, output, session) {
       )
     
     # check no NA values present: turn into 0s if so
-    if (any(is.na(init_df))) {
+    if (any(is.na(init_raw_df))) {
       
       if (debug_mode) {
-        print(init_df)
+        print(init_raw_df)
       }
       
-      init_df[, c(is.na(init_df))] <- 0
+      init_raw_df[, c(is.na(init_raw_df))] <- 0
       
       if (debug_mode) {
-        print(init_df)
+        print(init_raw_df)
       }
       
     }
+    
+    return(init_raw_df)
+    
+  })
+  
+  
+  parse_init <- reactive({
+    
+    init_raw_df <- init.raw()
+    
+    init_raw <- unlist(init_raw_df) 
+    
+    # check that time values are in (0, 24) hours domain
+    infeas <- any((init_raw < 0) | (init_raw > (23 + 59/60)))
+    
+    if (infeas) {
+      
+      # reset values in UI
+      
+      updateNumericInput(session, "initSleep", value = 11)
+      updateNumericInput(session, "initSleepmin", value = 50)
+      
+      updateNumericInput(session, "initScreen", value = 2)
+      updateNumericInput(session, "initScreenmin", value = 55)
+      
+      updateNumericInput(session, "initPA", value = 1)
+      updateNumericInput(session, "initPAmin", value = 57)
+      
+      updateNumericInput(session, "initQuietT", value = 1)
+      updateNumericInput(session, "initQuietTmin", value = 11)
+      
+      updateNumericInput(session, "initPassiveTrans", value = 0)
+      updateNumericInput(session, "initPassiveTransmin", value = 35)
+      
+      updateNumericInput(session, "initSchool", value = 2)
+      updateNumericInput(session, "initSchoolmin", value = 9)
+      
+      updateNumericInput(session, "initDomestic_SelfCare", value = 3)
+      updateNumericInput(session, "initDomestic_SelfCaremin", value = 23)
+      
+      # reset values in data.frame
+      init_raw_df <-
+        data.frame(
+          Sleep = 11 + 50 / 60,
+          Screen = 2 + 55 / 60,
+          PA = 1 + 57 / 60,
+          QuietT = 1 + 11 / 60,
+          PassiveTrans = 0 + 35 / 60,
+          School = 2 + 9 / 60,
+          Domestic_SelfCare = 3 + 23 / 60
+        )
+      
+      # Error string for unfeasible
+      # output$err0 <- renderText({
+      #   err0.string
+      # })
+      
+    } 
+    # else {
+    # 
+    #   # else no issue
+    #   output$err0 <- renderText({
+    #     " "
+    #   })
+    # 
+    # }
+    
+    return(init_raw_df)
+    
+  })
+  
+  
+  
+  init.time <- reactive({
+  
+    init_df <- parse_init()
     
     # check for 0 values as we need to add 65% of min to those values for ilrs to work
     lt0_df <- unlist(init_df) <= 0

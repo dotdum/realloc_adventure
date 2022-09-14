@@ -54,6 +54,11 @@ nact <- length(activity_nms)
 
 # ---- define error messages ----
 
+# unfeasible compositional parts error
+err0.string <- paste0(
+  "Initial time-use values have been reset as unfeasible values detected."
+)
+
 # Negative composition error
 err1.string <- paste0(
   "Time allocation does not add up to 24 hours."
